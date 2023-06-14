@@ -3,7 +3,7 @@ import numpy as np
 
 
 # -------------------------M/M/1-------------------------------------------------
-def bdr_info_mm1(lam, miu):
+def mm1_model_info(lam, miu):
     """Calculates the basic information of a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
@@ -22,7 +22,7 @@ def bdr_info_mm1(lam, miu):
     return system_info
 
 
-def bdr_mm1_Pn(lam, miu, n):
+def mm1_model_compute_Pn(lam, miu, n):
     """Calculates the probability of n clients in a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
@@ -39,7 +39,7 @@ def bdr_mm1_Pn(lam, miu, n):
 
 
 # -------------------------M/M/s-------------------------------------------------
-def calc_P_zero_mms(lam, miu, s):
+def mms_model_compute_Pzero(lam, miu, s):
     """Calculates the probability of zero clients in a M/M/s queueing system.
     param lam: Arrival rate
     param miu: Service rate
@@ -54,7 +54,7 @@ def calc_P_zero_mms(lam, miu, s):
     return P_0
 
 
-def bdr_info_mmn(lam, miu, s):
+def mms_model_info(lam, miu, s):
     """Calculates the basic information of a M/M/s queueing system.
     param lam: Arrival rate
     param miu: Service rate
@@ -69,7 +69,7 @@ def bdr_info_mmn(lam, miu, s):
     system_info = np.zeros(6)
     system_info[0] = rho
     # calculate probability of zero clients
-    system_info[1] = calc_P_zero_mms(lam, miu, s)
+    system_info[1] = mms_model_compute_Pzero(lam, miu, s)
     # calculate expected lenght of queue
     system_info[2] = (system_info[1] * pow(rho, s)) / (m.factorial(s) * pow(1 - rho, 2))
     # calculate the expected waiting time in queue
@@ -87,14 +87,14 @@ def bdr_info_mmn(lam, miu, s):
     return system_info
 
 
-def bdr_mms_Pn(lam, miu, s, n):
+def mms_model_compute_Pn(lam, miu, s, n):
     """Calculates the probability of n clients in a M/M/s queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param s: Number of servers
     param n: Number of clients
     return: Pn = Probability of n clients"""
-    P_0 = calc_P_zero_mms(lam, miu, s)
+    P_0 = mms_model_compute_Pzero(lam, miu, s)
     if n == 0:
         Pn = P_0
     elif n > 0:
