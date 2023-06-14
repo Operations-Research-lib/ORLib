@@ -96,6 +96,7 @@ def mms_model_compute_Pn(lam, miu, s, n):
     param n: Number of clients
     return: Pn = Probability of n clients"""
     P_0 = mms_model_compute_Pzero(lam, miu, s)
+    Pn = 0
     if n == 0:
         Pn = P_0
     elif n > 0:
