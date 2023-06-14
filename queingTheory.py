@@ -168,7 +168,7 @@ def mm1k_model_compute_avarage_lambda(lam, miu, k):
     return avarage_lambda
 
 
-def mm1k_model_info(lam, miu, k, n):
+def mm1k_model_info(lam, miu, k):
     """Calculates the basic information of a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
@@ -199,3 +199,22 @@ def mm1k_model_info(lam, miu, k, n):
 
 
 # -------------------------M/M/s/K----------------------------------------------
+def mmsk_model_compute_Pzero(lam, miu, k, s):
+    """Computes the probability of zero clients in the mmsk model
+    param lam: Arrival rate
+    param miu: Service rate
+    param k: Capacity of the system
+    param s: number of servers
+    return: Pzero = Probability of zero clients"""
+    Pzero = 0
+    rho = lam / miu
+    first_sum = 0
+    second_sum = 0
+    for n in range(s):
+        first_sum += pow(rho, n) / m.factorial(n)
+        first_sum += pow(rho, s) / m.factorial(s)
+    for n in range(s + 1, k):
+        second_sum += pow(lam / (s * miu), n - s)
+    Pzero = 1 / (first_sum * second_sum)
+    print("Pzero (Probability of zero clients) = ", Pzero)
+    return Pzero
