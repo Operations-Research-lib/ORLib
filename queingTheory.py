@@ -51,6 +51,7 @@ def mms_model_compute_Pzero(lam, miu, s):
         P_0 += pow(rho, i) / m.factorial(i)
         P_0 += (pow(rho, s) / (m.factorial(s))) * (1 / (1 - rho))
     P_0 = 1 / P_0
+    print("P_0 (Probability of zero clients) = ", P_0)
     return P_0
 
 
@@ -104,3 +105,16 @@ def mms_model_compute_Pn(lam, miu, s, n):
             Pn = P_0 * (pow((lam / miu), n) / (m.factorial(s) * pow(s, n - s)))
     print(f"Probability of {n} clients= ", Pn)
     return Pn
+
+
+# -------------------------M/M/1/K----------------------------------------------
+def mm1k_model_compute_Pzero(lam, miu, k):
+    """Calculates the probability of zero clients in a M/M/1/K queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    param k: Capacity of the system
+    return: P_0 = Probability of zero clients"""
+    rho = lam / miu
+    P_0 = (1 - rho) / (1 - pow(rho, k + 1))
+    print("P_0 (Probability of zero clients) = ", P_0)
+    return P_0
