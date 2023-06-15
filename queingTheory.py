@@ -274,7 +274,7 @@ def mmsk_model_compute_Wq(lam, miu, k, s):
     return Wq
 
 
-def mmsk_mode_info(lam, miu, k, s):
+def mmsk_model_info(lam, miu, k, s):
     """Calculates the system information of a M/M/s/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
