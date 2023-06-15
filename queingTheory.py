@@ -295,3 +295,113 @@ def mmsk_mode_info(lam, miu, k, s):
     # calculate the W expected waiting time in system
     system_info[5] = mmsk_model_compute_W(lam, miu, k, s)
     return system_info
+
+
+# -------------General Birth-Death Model-----------------------------------------
+def birth_death_model_compute_Cn(lamdas, mius, n):
+    """Computes the probability of n clients in the birth-death model
+    param lamdas: an array of Arrival rates. Starting from 0 to n
+    param mius: an array of Service rates. Starting from 1 to n
+    param n: number of clients
+    return: Cn = Probability of n clients"""
+    Cn = 0
+    if n == 0:
+        Cn = 1
+    else:
+        Cn = (lamdas[n - 1] / mius[n - 1]) * birth_death_model_compute_Cn(
+            lamdas, mius, n - 1
+        )
+    return Cn
+
+
+def birth_death_model_compute_Pzero(lamdas, mius, upper_bound):
+    """Computes the probability of zero clients in the birth-death model
+    param lamdas: an array of Arrival rates. Starting from 0 to n
+    param mius: an array of Service rates. Starting from 1 to n
+    return: Pzero = Probability of zero clients"""
+    Pzero = 0
+    first_sum = 0
+    second_sum = 0
+
+    Pzero = 0
+    sum_Cn = 0
+    for n in range(upper_bound):
+        Cn = birth_death_model_compute_Cn(lamdas, mius, n)
+        sum_Cn += Cn
+    Pzero = 1 / (sum_Cn)
+    return Pzero
+
+
+def birth_death_model_compute_Pn(lamdas, mius, upper_bound, n):
+    """Computes the probability of n clients in the birth-death model
+    param lamdas: an array of Arrival rates. Starting from 0 to n
+    param mius: an array of Service rates. Starting from 1 to n
+    param n: number of clients
+    return: Pn = Probability of n clients"""
+    Pn = 0
+    if n >= 0 and n <= upper_bound:
+        Pn = birth_death_model_compute_Cn(
+            lamdas, mius, n
+        ) * birth_death_model_compute_Pzero(lamdas, mius, upper_bound)
+    else:
+        Pn = 0
+    return Pn
+
+
+def birth_death_model_compute_L(lamdas, mius, upper_bound):
+    """Calculates the expected number of clients in a birth-death queueing system.
+    param lamdas: an array of Arrival rates. Starting from 0 to n
+    param mius: an array of Service rates. Starting from 1 to n
+    return: L = Expected number of clients"""
+    L = 0
+    for n in range(upper_bound):
+        L += n * birth_death_model_compute_Pn(lamdas, mius, upper_bound, n)
+    return L
+
+
+def birth_death_model_compute_Lq(lamdas, mius, s, upper_bound):
+    """Calculates the expected number of clients in queue in a birth-death queueing system.
+    param lamdas: an array of Arrival rates. Starting from 0 to n
+    param mius: an array of Service rates. Starting from 1 to n
+    return: Lq = Expected number of clients in queue"""
+    Lq = 0
+    for n in range(1, upper_bound):
+        Lq += (n - s) * birth_death_model_compute_Pn(lamdas, mius, upper_bound, n)
+    return Lq
+
+
+def birth_death_model_compute_average_lambda(lamdas, mius, upper_bound):
+    """Calculates the average arrival rate in a birth-death queueing system.
+    param lamdas: an array of Arrival rates. Starting from 0 to n
+    param mius: an array of Service rates. Starting from 1 to n
+    return: average_lambda = average arrival rate"""
+    average_lambda = 0
+    for n in range(upper_bound):
+        average_lambda += lamdas[n] * birth_death_model_compute_Pn(
+            lamdas, mius, upper_bound, n
+        )
+    return average_lambda
+
+
+def birth_death_model_compute_W(lamdas, mius, upper_bound):
+    """Calculates the expected waiting time in system in a birth-death queueing system.
+    param lamdas: an array of Arrival rates. Starting from 0 to n
+    param mius: an array of Service rates. Starting from 1 to n
+    return: W = Expected waiting time in system"""
+    W = 0
+    L = birth_death_model_compute_L(lamdas, mius, upper_bound)
+    average_lambda = birth_death_model_compute_average_lambda(lamdas, mius, upper_bound)
+    W = L / average_lambda
+    return W
+
+
+def birth_death_model_compute_Wq(lamdas, mius, s, upper_bound):
+    """Calculates the expected waiting time in queue in a birth-death queueing system.
+    param lamdas: an array of Arrival rates. Starting from 0 to n
+    param mius: an array of Service rates. Starting from 1 to n
+    return: Wq = Expected waiting time in queue"""
+    Wq = 0
+    Lq = birth_death_model_compute_Lq(lamdas, mius, s, upper_bound)
+    average_lambda = birth_death_model_compute_average_lambda(lamdas, mius, upper_bound)
+    Wq = Lq / average_lambda
+    return Wq
