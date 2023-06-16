@@ -415,3 +415,33 @@ def queueing_theory_compute_L(probabilities):
     for n in range(len(probabilities)):
         L += n * probabilities[n]
     return L
+
+
+def queueing_theory_compute_Lq(probabilities, s):
+    """ "computes the expected number of clients in the queue
+    based on a vector of probabilities"""
+    Lq = 0
+    for n in range(1, len(probabilities)):
+        Lq += (n - s) * probabilities[n]
+    return Lq
+
+
+def queueing_theory_compute_W(Wq, miu):
+    """ "computes the expected waiting time in the system
+    based on a vector of probabilities"""
+    W = Wq + 1 / miu
+    return W
+
+
+def queueing_theory_compute_W(L, lam):
+    """ "computes the expected waiting time in the system
+    based on a vector of probabilities"""
+    W = L / lam
+    return W
+
+
+def queueing_theory_compute_Wq(Lq, lam):
+    """ "computes the expected waiting time in the queue
+    based on a vector of probabilities"""
+    Wq = Lq / lam
+    return Wq
