@@ -463,7 +463,13 @@ def poisson_distribution_mass_function(lam, k):
     prob = (lam) ** k * np.exp(-lam) / m.factorial(k)
     return prob
 
-
+def poisson_distribution_sum_P(lam, t, up_to):
+    """ "computes the probability of up_to arrivals in time t
+    based on the poisson distribution"""
+    prob = 0
+    for x in range(up_to):
+        prob += poisson_distribution_events_in_interval(x, lam, t)
+    return prob
 # -------------Exponential distribution---------------------------------
 def exponential_distribution_compute_P(t, miu):
     """ "computes the probability of a service time greater than t
@@ -471,3 +477,5 @@ def exponential_distribution_compute_P(t, miu):
     prob = 0
     prob = np.exp(-miu * t)
     return prob
+
+
