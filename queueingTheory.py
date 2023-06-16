@@ -405,3 +405,13 @@ def birth_death_model_compute_Wq(lamdas, mius, s, upper_bound):
     average_lambda = birth_death_model_compute_average_lambda(lamdas, mius, upper_bound)
     Wq = Lq / average_lambda
     return Wq
+
+
+# -------------General Queueing theory formulas---------------------------------
+def queueing_theory_compute_L(probabilities):
+    """ "computes the expected number of clients in the system
+    based on a vector of probabilities"""
+    L = 0
+    for n in range(len(probabilities)):
+        L += n * probabilities[n]
+    return L
