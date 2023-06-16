@@ -421,7 +421,7 @@ def queueing_theory_compute_Lq(probabilities, s):
     """ "computes the expected number of clients in the queue
     based on a vector of probabilities"""
     Lq = 0
-    for n in range(1, len(probabilities)):
+    for n in range(s, len(probabilities)):
         Lq += (n - s) * probabilities[n]
     return Lq
 
@@ -445,3 +445,29 @@ def queueing_theory_compute_Wq(Lq, lam):
     based on a vector of probabilities"""
     Wq = Lq / lam
     return Wq
+
+
+# -------------Poisson distribution---------------------------------
+def poisson_distribution_events_in_interval(x, lam, t):
+    """ "computes the probability of x arrivals in time t
+    based on the poisson distribution"""
+    prob = 0
+    prob = (lam * t) ** x * np.exp(-lam * t) / m.factorial(x)
+    return prob
+
+
+def poisson_distribution_mass_function(lam, k):
+    """ "computes the probability of k arrivals in time t
+    based on the poisson distribution"""
+    prob = 0
+    prob = (lam) ** k * np.exp(-lam) / m.factorial(k)
+    return prob
+
+
+# -------------Exponential distribution---------------------------------
+def exponential_distribution_compute_P(t, miu):
+    """ "computes the probability of a service time greater than t
+    based on the exponential distribution"""
+    prob = 0
+    prob = np.exp(-miu * t)
+    return prob
