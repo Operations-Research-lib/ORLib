@@ -604,3 +604,14 @@ def exponential_distribution_compute_P(t, alpha):
     elif t < 0:
         prob = 0
     return prob
+
+def exponential_commulative_distribution(t, alpha, less):
+    """ "computes the commulative probability of an exponential distribution
+    param: t = time interval
+    param: alpha = average number of events per unit time
+    param: less = chooses if less equal or bigger than is desired
+    return: prob = probability of a service time greater than t"""
+    prob = np.exp(-alpha * t)
+    if less:
+        prob = 1 - prob
+    return prob
