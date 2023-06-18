@@ -4,7 +4,7 @@ import numpy as np
 
 # -------------------------M/M/1-------------------------------------------------
 def mm1_model_info(lam, miu):
-    """Calculates the basic information of a M/M/1 queueing system.
+    """computes the basic information of a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     return: system_info = [rho, Lq, L, Wq, W]"""
@@ -18,7 +18,7 @@ def mm1_model_info(lam, miu):
 
 
 def mm1_model_compute_Pn(lam, miu, n):
-    """Calculates the probability of n clients in a M/M/1 queueing system.
+    """computes the probability of n clients in a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param n: Number of clients
@@ -34,7 +34,7 @@ def mm1_model_compute_Pn(lam, miu, n):
 
 # -------------------------M/M/s-------------------------------------------------
 def mms_model_compute_Pzero(lam, miu, s):
-    """Calculates the probability of zero clients in a M/M/s queueing system.
+    """computes the probability of zero clients in a M/M/s queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param s: Number of servers
@@ -49,7 +49,7 @@ def mms_model_compute_Pzero(lam, miu, s):
 
 
 def mms_model_info(lam, miu, s):
-    """Calculates the basic information of a M/M/s queueing system.
+    """computes the basic information of a M/M/s queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param s: Number of servers
@@ -76,7 +76,7 @@ def mms_model_info(lam, miu, s):
 
 
 def mms_model_compute_Pn(lam, miu, s, n):
-    """Calculates the probability of n clients in a M/M/s queueing system.
+    """computes the probability of n clients in a M/M/s queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param s: Number of servers
@@ -96,7 +96,7 @@ def mms_model_compute_Pn(lam, miu, s, n):
 
 # -------------------------M/M/1/K----------------------------------------------
 def mm1k_model_compute_Pzero(lam, miu, k):
-    """Calculates the probability of zero clients in a M/M/1/K queueing system.
+    """computes the probability of zero clients in a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
@@ -112,7 +112,7 @@ def mm1k_model_compute_Pzero(lam, miu, k):
 
 def mm1k_model_compute_Pn(lam, miu, k, n):
     # TODO(@AboTresol): should we check if k is greater than n?
-    """Calculates the probability of n clients in a M/M/1/K queueing system.
+    """computes the probability of n clients in a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
@@ -128,7 +128,7 @@ def mm1k_model_compute_Pn(lam, miu, k, n):
 
 
 def mm1k_model_compute_L(rho, k):
-    """Calculates the expected number of clients in a M/M/1/K queueing system.
+    """computes the expected number of clients in a M/M/1/K queueing system.
     param rho: Utilization factor
     param k: Capacity of the system
     return: L = Expected number of clients"""
@@ -141,7 +141,7 @@ def mm1k_model_compute_L(rho, k):
 
 
 def mm1k_model_compute_avarage_lambda(lam, miu, k):
-    """Calculates the avarage arrival rate in a M/M/1/K queueing system.
+    """computes the avarage arrival rate in a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
@@ -153,7 +153,7 @@ def mm1k_model_compute_avarage_lambda(lam, miu, k):
 
 
 def mm1k_model_info(lam, miu, k):
-    """Calculates the basic information of a M/M/1/K queueing system.
+    """computes the basic information of a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
@@ -217,7 +217,7 @@ def mmsk_model_compute_Pn(lam, miu, k, s, n):
 
 
 def mmsk_model_compute_Lq(lam, miu, k, s):
-    """Calculates the expected number of clients in queue in a M/M/s/K queueing system.
+    """computes the expected number of clients in queue in a M/M/s/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
@@ -231,7 +231,7 @@ def mmsk_model_compute_Lq(lam, miu, k, s):
 
 
 def mmsk_model_compute_L(lam, miu, k, s):
-    """Calculates the expected number of clients in a M/M/s/K queueing system.
+    """computes the expected number of clients in a M/M/s/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
@@ -249,7 +249,7 @@ def mmsk_model_compute_L(lam, miu, k, s):
 
 
 def mmsk_model_compute_W(lam, miu, k, s):
-    """Calculates the expected waiting time in system in a M/M/s/K queueing system.
+    """computes the expected waiting time in system in a M/M/s/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
@@ -262,7 +262,7 @@ def mmsk_model_compute_W(lam, miu, k, s):
 
 
 def mmsk_model_compute_Wq(lam, miu, k, s):
-    """Calculates the expected waiting time in queue in a M/M/s/K queueing system.
+    """computes the expected waiting time in queue in a M/M/s/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
@@ -275,7 +275,7 @@ def mmsk_model_compute_Wq(lam, miu, k, s):
 
 
 def mmsk_model_info(lam, miu, k, s):
-    """Calculates the system information of a M/M/s/K queueing system.
+    """computes the system information of a M/M/s/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
