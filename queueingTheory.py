@@ -462,11 +462,11 @@ def queueing_theory_compute_Wq(Lq, lam):
 
 
 def queueing_theory_compute_Ls(probabilities, s):
-    """ "computes the expected number of clients in the system
+    """computes expected number of customers being served in the system
     based on a vector of probabilities
     param: probabilities = vector of probabilities
     param: s = number of servers
-    return: Ls = expected number of clients in the system"""
+    return: Ls = expected number of customers being served in the system"""
     L = queueing_theory_compute_L(probabilities)
     Lq = queueing_theory_compute_Lq(probabilities, s)
     Ls = L - Lq
@@ -474,13 +474,47 @@ def queueing_theory_compute_Ls(probabilities, s):
 
 
 def queueing_theory_compute_Ls(L, Lq):
-    """ "computes the expected number of clients in the system
-    based on a vector of probabilities
+    """computes expected number of customers being served in the system
     param: L = expected number of clients in the system
     param: Lq = expected number of clients in the queue
-    return: Ls = expected number of clients in the system"""
+    return: Ls = expected number of customers being served in the system"""
     Ls = L - Lq
     return Ls
+
+
+def queueing_theory_compute_expected_service_time(W, Wq):
+    """ "computes the expected avarage waiting time to complete a service
+    param: W = expected waiting time in the system
+    param: Wq = expected waiting time in the queue
+    return: expected_service_time"""
+    average_service_time = W - Wq
+    return average_service_time
+
+
+def queueing_theory_compute_expected_service_time(miu):
+    """ "computes the expected avarage waiting time to complete a service
+    param: miu = average service rate
+    return: expected_service_time"""
+    expected_service_time = 1 / miu
+    return expected_service_time
+
+
+def queueing_theory_compute_expected_interarrival_time(lam):
+    """computes the expected avarage waiting time to complete a service
+    param: lam = average arrival rate
+    return: Ws = expected waiting time in the system"""
+    expected_interarrival_time = 1 / lam
+    return expected_interarrival_time
+
+
+def queueing_theory_compute_rho(lam, miu, s=1):
+    """Computes the utilization factor of the system
+    param: lam = average arrival rate
+    param: miu = average service rate
+    param: s = number of servers
+    return: rho = utilization factor"""
+    rho = lam / (s * miu)
+    return rho
 
 
 # -------------Poisson distribution---------------------------------
