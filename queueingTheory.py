@@ -517,6 +517,15 @@ def queueing_theory_compute_rho(lam, miu, s=1):
     return rho
 
 
+def queueing_theory_get_miu_from_waits(W, Wq):
+    """computes the average service rate from the waiting times
+    param: W = expected waiting time in the system
+    param: Wq = expected waiting time in the queue
+    return: miu = average service rate"""
+    miu = 1 / (W - Wq)
+    return miu
+
+
 # -------------Poisson distribution---------------------------------
 def poisson_distribution_events_in_interval(x, lam, t):
     """ "computes the probability of x arrivals in time t
