@@ -410,7 +410,9 @@ def birth_death_model_compute_Wq(lamdas, mius, s, upper_bound):
 # -------------General Queueing theory formulas---------------------------------
 def queueing_theory_compute_L(probabilities):
     """ "computes the expected number of clients in the system
-    based on a vector of probabilities"""
+    based on a vector of probabilities
+    param: probabilities = vector of probabilities
+    return: L = expected number of clients"""
     L = 0
     for n in range(len(probabilities)):
         L += n * probabilities[n]
@@ -419,7 +421,10 @@ def queueing_theory_compute_L(probabilities):
 
 def queueing_theory_compute_Lq(probabilities, s):
     """ "computes the expected number of clients in the queue
-    based on a vector of probabilities"""
+    based on a vector of probabilities
+    param: probabilities = vector of probabilities
+    param: s = number of servers
+    return: Lq = expected number of clients in the queue"""
     Lq = 0
     for n in range(s, len(probabilities)):
         Lq += (n - s) * probabilities[n]
@@ -428,21 +433,30 @@ def queueing_theory_compute_Lq(probabilities, s):
 
 def queueing_theory_compute_W(Wq, miu):
     """ "computes the expected waiting time in the system
-    based on a vector of probabilities"""
+    based on a vector of probabilities
+    param: Wq = expected waiting time in the queue
+    param: miu = average service rate
+    return: W = expected waiting time in the system"""
     W = Wq + 1 / miu
     return W
 
 
 def queueing_theory_compute_W(L, lam):
     """ "computes the expected waiting time in the system
-    based on a vector of probabilities"""
+    based on a vector of probabilities
+    param: L = expected number of clients in the system
+    param: lam = average arrival rate
+    return: W = expected waiting time in the system"""
     W = L / lam
     return W
 
 
 def queueing_theory_compute_Wq(Lq, lam):
     """ "computes the expected waiting time in the queue
-    based on a vector of probabilities"""
+    based on a vector of probabilities
+    param: Lq = expected number of clients in the queue
+    param: lam = average arrival rate
+    return: Wq = expected waiting time in the queue"""
     Wq = Lq / lam
     return Wq
 
@@ -450,7 +464,10 @@ def queueing_theory_compute_Wq(Lq, lam):
 # -------------Poisson distribution---------------------------------
 def poisson_distribution_events_in_interval(x, lam, t):
     """ "computes the probability of x arrivals in time t
-    based on the poisson distribution"""
+    based on the poisson distribution
+    param: x = number of events
+    param: lam = average number of events per unit time
+    param: t = time interval"""
     prob = 0
     prob = (lam * t) ** x * np.exp(-lam * t) / m.factorial(x)
     return prob
@@ -458,7 +475,10 @@ def poisson_distribution_events_in_interval(x, lam, t):
 
 def poisson_distribution_mass_function(lam, k):
     """ "computes the probability of k arrivals in time t
-    based on the poisson distribution"""
+    based on the poisson distribution
+    param: lam = average number of events per unit time
+    param: k = number of events
+    return: prob = probability of k arrivals in time t"""
     prob = 0
     prob = (lam) ** k * np.exp(-lam) / m.factorial(k)
     return prob
@@ -466,7 +486,11 @@ def poisson_distribution_mass_function(lam, k):
 
 def poisson_distribution_sum_P(lam, t, up_to):
     """ "computes the probability of up_to arrivals in time t
-    based on the poisson distribution"""
+    based on the poisson distribution
+    param: lam = average number of events per unit time
+    param: t = time interval
+    param: up_to = number of events
+    return: prob = probability of up_to arrivals in time t"""
     prob = 0
     for x in range(up_to):
         prob += poisson_distribution_events_in_interval(x, lam, t)
@@ -485,9 +509,15 @@ def poison_distribution_expected_events(lam, t):
 
 
 # -------------Exponential distribution---------------------------------
-def exponential_distribution_compute_P(t, miu):
+def exponential_distribution_compute_P(t, alpha):
     """ "computes the probability of a service time greater than t
-    based on the exponential distribution"""
+    based on the exponential distribution
+    param: t = time interval
+    param: alpha = average number of events per unit time
+    return: prob = probability of a service time greater than t"""
     prob = 0
-    prob = np.exp(-miu * t)
+    if t >= 0:
+        prob = alpha * np.exp(-alpha * t)
+    elif t < 0:
+        prob = 0
     return prob
