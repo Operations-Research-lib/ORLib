@@ -461,6 +461,28 @@ def queueing_theory_compute_Wq(Lq, lam):
     return Wq
 
 
+def queueing_theory_compute_Ls(probabilities, s):
+    """ "computes the expected number of clients in the system
+    based on a vector of probabilities
+    param: probabilities = vector of probabilities
+    param: s = number of servers
+    return: Ls = expected number of clients in the system"""
+    L = queueing_theory_compute_L(probabilities)
+    Lq = queueing_theory_compute_Lq(probabilities, s)
+    Ls = L - Lq
+    return Ls
+
+
+def queueing_theory_compute_Ls(L, Lq):
+    """ "computes the expected number of clients in the system
+    based on a vector of probabilities
+    param: L = expected number of clients in the system
+    param: Lq = expected number of clients in the queue
+    return: Ls = expected number of clients in the system"""
+    Ls = L - Lq
+    return Ls
+
+
 # -------------Poisson distribution---------------------------------
 def poisson_distribution_events_in_interval(x, lam, t):
     """ "computes the probability of x arrivals in time t
