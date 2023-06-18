@@ -431,7 +431,7 @@ def queueing_theory_compute_Lq(probabilities, s):
     return Lq
 
 
-def queueing_theory_compute_W(Wq, miu):
+def queueing_theory_compute_W_from_Wq(Wq, miu):
     """ "computes the expected waiting time in the system
     based on a vector of probabilities
     param: Wq = expected waiting time in the queue
@@ -441,7 +441,7 @@ def queueing_theory_compute_W(Wq, miu):
     return W
 
 
-def queueing_theory_compute_W(L, lam):
+def queueing_theory_compute_W_from_L(L, lam):
     """ "computes the expected waiting time in the system
     based on a vector of probabilities
     param: L = expected number of clients in the system
@@ -461,7 +461,7 @@ def queueing_theory_compute_Wq(Lq, lam):
     return Wq
 
 
-def queueing_theory_compute_Ls(probabilities, s):
+def queueing_theory_compute_Ls_from_probs(probabilities, s):
     """computes expected number of customers being served in the system
     based on a vector of probabilities
     param: probabilities = vector of probabilities
@@ -482,7 +482,7 @@ def queueing_theory_compute_Ls(L, Lq):
     return Ls
 
 
-def queueing_theory_compute_expected_service_time(W, Wq):
+def queueing_theory_compute_service_time_from_waits(W, Wq):
     """ "computes the expected avarage waiting time to complete a service
     param: W = expected waiting time in the system
     param: Wq = expected waiting time in the queue
@@ -491,7 +491,7 @@ def queueing_theory_compute_expected_service_time(W, Wq):
     return average_service_time
 
 
-def queueing_theory_compute_expected_service_time(miu):
+def queueing_theory_compute_service_time_from_miu(miu):
     """ "computes the expected avarage waiting time to complete a service
     param: miu = average service rate
     return: expected_service_time"""
@@ -499,7 +499,7 @@ def queueing_theory_compute_expected_service_time(miu):
     return expected_service_time
 
 
-def queueing_theory_compute_expected_interarrival_time(lam):
+def queueing_theory_compute_interarrival_time(lam):
     """computes the expected avarage waiting time to complete a service
     param: lam = average arrival rate
     return: Ws = expected waiting time in the system"""
