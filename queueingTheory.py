@@ -8,6 +8,9 @@ def mm1_model_info(lam, miu):
     param lam: Arrival rate
     param miu: Service rate
     return: system_info = [rho, Lq, L, Wq, W]"""
+    if lam == miu:
+        print("The system is unstable")
+        return None
     system_info = np.zeros(5)
     system_info[0] = lam / miu
     system_info[1] = pow(lam, 2) / (miu * (miu - lam))
@@ -15,6 +18,63 @@ def mm1_model_info(lam, miu):
     system_info[3] = lam / (miu * (miu - lam))
     system_info[4] = 1 / (miu - lam)
     return system_info
+
+
+def mm1_model_compute_rho(lam, miu):
+    """computes the utilization factor of a M/M/1 queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    return: rho = Utilization factor"""
+    rho = lam / miu
+    return rho
+
+
+def mm1_model_compute_Lq(lam, miu):
+    """computes the average number of clients in the queue of a M/M/1 queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    return: Lq = Average number of clients in the queue"""
+    if lam == miu:
+        print("The system is unstable")
+        return None
+    Lq = pow(lam, 2) / (miu * (miu - lam))
+    return Lq
+
+
+def mm1_model_compute_L(lam, miu):
+    """computes the average number of clients in the system of a M/M/1 queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    return: L = Average number of clients in the system"""
+    if lam == miu:
+        print("The system is unstable")
+        return None
+    L = lam / (miu - lam)
+    return L
+
+
+def mm1_model_compute_Wq(lam, miu):
+    """computes the average waiting time in the queue of a M/M/1 queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    return: Wq = Average waiting time in the queue"""
+    if lam == miu:
+        print("The system is unstable")
+        return None
+    Wq = lam / (miu * (miu - lam))
+    return Wq
+
+
+def mm1_model_compute_W(lam, miu):
+    """computes the average waiting time in the system of a M/M/1 queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    return: W = Average waiting time in the system"""
+    if lam == miu:
+        print("The system is unstable")
+        return None
+    W = 1 / (miu - lam)
+    return W
 
 
 def mm1_model_compute_Pn(lam, miu, n):
@@ -41,9 +101,9 @@ def mms_model_compute_Pzero(lam, miu, s):
     return: Pzero = Probability of zero clients"""
     Pzero = 0
     rho = lam / (s * miu)
-    for i in range(s):
-        Pzero += pow(rho, i) / m.factorial(i)
-        Pzero += (pow(rho, s) / (m.factorial(s))) * (1 / (1 - rho))
+    for n in range(s):
+        Pzero += pow((lam / miu), n) / m.factorial(n)
+        Pzero += (pow((lam / miu), s) / (m.factorial(s))) * (1 / (1 - rho))
     Pzero = 1 / Pzero
     return Pzero
 
@@ -65,14 +125,66 @@ def mms_model_info(lam, miu, s):
     # calculate probability of zero clients
     system_info[1] = mms_model_compute_Pzero(lam, miu, s)
     # calculate expected lenght of queue
-    system_info[2] = (system_info[1] * pow(rho, s)) / (m.factorial(s) * pow(1 - rho, 2))
+    system_info[2] = mms_model_compute_Lq(lam, miu, s)
     # calculate the expected waiting time in queue
-    system_info[3] = system_info[2] / lam
+    system_info[3] = mms_model_compute_Wq(lam, miu, s)
     # calculate the expected waiting time in system
-    system_info[4] = system_info[3] + (1 / miu)
+    system_info[4] = mms_model_compute_W(lam, miu, s)
     # calculate the expected number of clients in the system
-    system_info[5] = system_info[2] + (lam / miu)
+    system_info[5] = mms_model_compute_L(lam, miu, s)
     return system_info
+
+
+def mms_model_compute_Lq(lam, miu, s):
+    """computes the average number of clients in the queue of a M/M/s queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    param s: Number of servers
+    return: Lq = Average number of clients in the queue"""
+    Lq = 0
+    rho = lam / (s * miu)
+    if rho >= 1:
+        print("The system is unstable")
+        return None
+    Pzero = mms_model_compute_Pzero(lam, miu, s)
+    Lq = (Pzero * pow((lam / miu), s) * rho) / (m.factorial(s) * pow(1 - rho, 2))
+    return Lq
+
+
+def mms_model_compute_Wq(lam, miu, s):
+    """computes the average waiting time in the queue of a M/M/s queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    param s: Number of servers
+    return: Wq = Average waiting time in the queue"""
+    Wq = 0
+    Lq = mms_model_compute_Lq(lam, miu, s)
+    Wq = Lq / lam
+    return Wq
+
+
+def mms_model_compute_W(lam, miu, s):
+    """computes the average waiting time in the system of a M/M/s queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    param s: Number of servers
+    return: W = Average waiting time in the system"""
+    W = 0
+    Wq = mms_model_compute_Wq(lam, miu, s)
+    W = Wq + (1 / miu)
+    return W
+
+
+def mms_model_compute_L(lam, miu, s):
+    """computes the average number of clients in the system of a M/M/s queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    param s: Number of servers
+    return: L = Average number of clients in the system"""
+    L = 0
+    Lq = mms_model_compute_Lq(lam, miu, s)
+    L = Lq + (lam / miu)
+    return L
 
 
 def mms_model_compute_Pn(lam, miu, s, n):
@@ -127,26 +239,62 @@ def mm1k_model_compute_Pn(lam, miu, k, n):
     return Pn
 
 
-def mm1k_model_compute_L(rho, k):
+def mm1k_model_compute_L(lam, miu, k):
     """computes the expected number of clients in a M/M/1/K queueing system.
     param rho: Utilization factor
     param k: Capacity of the system
     return: L = Expected number of clients"""
     L = 0
+    rho = lam / miu
     if rho == 1:
         L = k / 2
     else:
-        L = (rho / (1 - rho)) - ((((k + 1) * pow(rho, k + 1))) / (1 - pow(rho, k + 1)))
+        L = (rho / (1 - rho)) - ((k + 1) * pow(rho, k + 1) / (1 - pow(rho, k + 1)))
     return L
 
 
-def mm1k_model_compute_avarage_lambda(lam, miu, k):
+def mm1k_model_compute_Lq(lam, miu, k):
+    """computes the expected number of clients in the queue of a M/M/1/K queueing system.
+    param rho: Utilization factor
+    param k: Capacity of the system
+    return: Lq = Expected number of clients in the queue"""
+    Lq = 0
+    L = mm1k_model_compute_L(lam, miu, k)
+    Pzero = mm1k_model_compute_Pzero(lam, miu, k)
+    Lq = L - (1 - Pzero)
+    return Lq
+
+
+def mm1k_model_compute_W(lam, miu, k):
+    """computes the expected waiting time in a M/M/1/K queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    param k: Capacity of the system
+    return: W = Expected waiting time"""
+    W = 0
+    L = mm1k_model_compute_L(lam, miu, k)
+    W = L / mm1k_model_compute_average_lambda(lam, miu, k)
+    return W
+
+
+def mm1k_model_compute_Wq(lam, miu, k):
+    """computes the expected waiting time in the queue of a M/M/1/K queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    param k: Capacity of the system
+    return: Wq = Expected waiting time in the queue"""
+    Wq = 0
+    Lq = mm1k_model_compute_Lq(lam, miu, k)
+    Wq = Lq / mm1k_model_compute_average_lambda(lam, miu, k)
+    return Wq
+
+
+def mm1k_model_compute_average_lambda(lam, miu, k):
     """computes the avarage arrival rate in a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
     return: avarage_lambda = Avarage arrival rate"""
-    rho = lam / miu
     Pk = mm1k_model_compute_Pn(lam, miu, k, k)
     avarage_lambda = lam * (1 - Pk)
     return avarage_lambda
@@ -160,19 +308,18 @@ def mm1k_model_info(lam, miu, k):
     param n: Number of clients
     return: system_info = [rho, Pzero, L, Lq, Wq, W]"""
     system_info = np.zeros(6)
-    avarage_lambda = mm1k_model_compute_avarage_lambda(lam, miu, k)
     # calculate rho, remember that mm1k models are always stable
     system_info[0] = lam / miu
     # calculate probability of zero clients
     system_info[1] = mm1k_model_compute_Pzero(lam, miu, k)
     # calculate L expected number of clients in the system
-    system_info[2] = mm1k_model_compute_L(system_info[0], k)
+    system_info[2] = mm1k_model_compute_L(lam, miu, k)
     # calculate the Lq expected lenght of queue
-    system_info[3] = system_info[2] - (1 - system_info[1])
+    system_info[3] = mm1k_model_compute_Lq(lam, miu, k)
     # calculate the Wq expected waiting time in queue
-    system_info[4] = system_info[3] / avarage_lambda
+    system_info[4] = mm1k_model_compute_Wq(lam, miu, k)
     # calculate the W expected waiting time in system
-    system_info[5] = system_info[2] / avarage_lambda
+    system_info[5] = mm1k_model_compute_W(lam, miu, k)
     return system_info
 
 
@@ -257,7 +404,7 @@ def mmsk_model_compute_W(lam, miu, k, s):
     return: W = Expected waiting time in system"""
     W = 0
     L = mmsk_model_compute_L(lam, miu, k, s)
-    W = L / mm1k_model_compute_avarage_lambda(lam, miu, k)
+    W = L / mm1k_model_compute_average_lambda(lam, miu, k)
     return W
 
 
@@ -270,7 +417,7 @@ def mmsk_model_compute_Wq(lam, miu, k, s):
     return: Wq = Expected waiting time in queue"""
     Wq = 0
     Lq = mmsk_model_compute_Lq(lam, miu, k, s)
-    Wq = Lq / mm1k_model_compute_avarage_lambda(lam, miu, k)
+    Wq = Lq / mm1k_model_compute_average_lambda(lam, miu, k)
     return Wq
 
 
@@ -297,7 +444,10 @@ def mmsk_model_info(lam, miu, k, s):
     return system_info
 
 
-# -------------General Birth-Death Model-----------------------------------------
+# -------------General Birth-Death Model----------------------------------------
+# all functions are based on equations from Introduction to Operations Research
+# by Hillier and Lieberman ed.11 chapter 17
+# Note: all functions have been tested and work properly
 def birth_death_model_compute_Cn(lamdas, mius, n):
     """Computes the probability of n clients in the birth-death model
     param lamdas: an array of Arrival rates. Starting from 0 to n
@@ -321,9 +471,8 @@ def birth_death_model_compute_Pzero(lamdas, mius):
     return: Pzero = Probability of zero clients"""
     Pzero = 0
     sum_Cn = 0
-    for n in range(0, len(lamdas) + 1):
+    for n in range(len(lamdas) + 1):
         Cn = birth_death_model_compute_Cn(lamdas, mius, n)
-
         sum_Cn += Cn
     Pzero = 1 / (sum_Cn)
     return Pzero
@@ -336,7 +485,7 @@ def birth_death_model_compute_Pn(lamdas, mius, n):
     param n: number of clients
     return: Pn = Probability of n clients"""
     Pn = 0
-    if n >= 0 and n <= len(lamdas) + 1:
+    if n >= 0 and n <= len(lamdas):
         Pn = birth_death_model_compute_Cn(
             lamdas, mius, n
         ) * birth_death_model_compute_Pzero(lamdas, mius)
@@ -425,6 +574,9 @@ def birth_death_model_info(lamdas, mius, s):
 
 
 # -------------General Queueing theory formulas---------------------------------
+# all functions are based on equations from Introduction to Operations Research
+# by Hillier and Lieberman ed.11 chapter 17
+# Note: all functions have been tested and work properly
 def queueing_theory_compute_L(probabilities):
     """ "computes the expected number of clients in the system
     based on a vector of probabilities
@@ -552,7 +704,8 @@ def queueing_theory_get_miu_from_waits(W, Wq):
     return miu
 
 
-# -------------Poisson distribution---------------------------------
+# -------------Poisson distribution---------------------------------------------
+# note: all functions have been tested and work properly
 def poisson_distribution_events_in_interval(x, lam, t):
     """ "computes the probability of x arrivals in time t
     based on the poisson distribution
@@ -599,7 +752,8 @@ def poison_distribution_expected_events(lam, t):
     return expected_events
 
 
-# -------------Exponential distribution---------------------------------
+# -------------Exponential distribution-----------------------------------------
+# note: all functions have been tested and work properly
 def exponential_distribution_compute_P(t, alpha):
     """ "computes the probability of a service time greater than t
     based on the exponential distribution
