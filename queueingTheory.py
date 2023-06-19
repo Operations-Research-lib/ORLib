@@ -508,6 +508,15 @@ def queueing_theory_compute_service_time_from_waits(W, Wq):
     return average_service_time
 
 
+def queueing_theory_compute_service_rate_from_waits(W, Wq):
+    """ "computes the expected avarage waiting time to complete a service
+    param: W = expected waiting time in the system
+    param: Wq = expected waiting time in the queue
+    return: expected_service_time"""
+    average_service_rate = 1 / (W - Wq)
+    return average_service_rate
+
+
 def queueing_theory_compute_service_time_from_miu(miu):
     """ "computes the expected avarage waiting time to complete a service
     param: miu = average service rate
