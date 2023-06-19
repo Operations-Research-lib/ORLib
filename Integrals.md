@@ -104,5 +104,6 @@ function = 1 / (smp.sqrt(x) * (x + 1))
 result = smp.integrate(function, x)
 ```
 
-Result: $2 \operatorname{atan}{\left(\sqrt{x} \right)}$
+Result: $2 \text{atan} \left( \sqrt{x} \right)$
+
 
