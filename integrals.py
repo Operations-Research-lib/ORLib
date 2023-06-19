@@ -9,6 +9,7 @@ function = x ** 2
 # Send to integrate the function in terms of x
 result = smp.integrate(function, x)
 
-print(result)
+# Pretty print to see it more clearly
+smp.pprint(result)
 
 
