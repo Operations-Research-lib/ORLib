@@ -40,18 +40,18 @@ This can help view the result better if the `pprint()` function is too complex
 + The rest of the trigonometric functions can be obtained by using: 
 
 ```
-smp.asin() 
-smp.acos() 
-smp.atan()
-smp.acot()
-smp.sinh()
-smp.cosh()
-smp.tanh()
-smp.coth()
-smp.asinh()
-smp.acosh()
-smp.atanh()
-smp.acoth()
+smp.asin(x) 
+smp.acos(x) 
+smp.atan(x)
+smp.acot(x)
+smp.sinh(x)
+smp.cosh(x)
+smp.tanh(x)
+smp.coth(x)
+smp.asinh(x)
+smp.acosh(x)
+smp.atanh(x)
+smp.acoth(x)
 ```
 
 ## **Examples**
@@ -73,3 +73,36 @@ result = smp.integrate(function, x)
 Result: $\frac{x^{3}}{3}$
 
 ### **Second example**
+
+Calculate the integral of $\frac{x}{2}$
+
+```
+# Define x as a real variable for the function
+x = smp.symbols('x', real = True)
+
+# Create the function
+function = x / 2
+
+# Send to integrate the function in terms of x
+result = smp.integrate(function, x)
+```
+
+Result: $\frac{x^{2}}{4}$
+
+### **Third example**
+
+Calculate the integral of $\frac{1}{\sqrt{x} \left(x + 1\right)}$
+
+```
+# Define x as a real variable for the function
+x = smp.symbols('x', real = True)
+
+# Create the function
+function = 1 / (smp.sqrt(x) * (x + 1))
+
+# Send to integrate the function in terms of x
+result = smp.integrate(function, x)
+```
+
+Result: $2 \operatorname{atan}{\left(\sqrt{x} \right)}$
+
