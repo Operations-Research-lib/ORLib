@@ -218,6 +218,9 @@ def mms_model_compute_Pn(lam, miu, s, n):
 
 
 # -------------------------M/M/1/K----------------------------------------------
+# all the functions in this section are based on the equations of the M/M/s model
+# as described in the book "Introduction to Operations Research" by Hillier and Lieberman
+# note: all functions have been tested and work properly
 def mm1k_model_compute_Pzero(lam, miu, k):
     """computes the probability of zero clients in a M/M/1/K queueing system.
     param lam: Arrival rate
@@ -301,14 +304,14 @@ def mm1k_model_compute_Wq(lam, miu, k):
 
 
 def mm1k_model_compute_average_lambda(lam, miu, k):
-    """computes the avarage arrival rate in a M/M/1/K queueing system.
+    """computes the average arrival rate in a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
-    return: avarage_lambda = Avarage arrival rate"""
+    return: average_lambda = average arrival rate"""
     Pk = mm1k_model_compute_Pn(lam, miu, k, k)
-    avarage_lambda = lam * (1 - Pk)
-    return avarage_lambda
+    average_lambda = lam * (1 - Pk)
+    return average_lambda
 
 
 def mm1k_model_info(lam, miu, k):
@@ -335,6 +338,10 @@ def mm1k_model_info(lam, miu, k):
 
 
 # -------------------------M/M/s/K----------------------------------------------
+# all the functions in this section are based on the equations of the M/M/s model
+# as described in the book "Introduction to Operations Research" by Hillier and Lieberman
+# note: all functions have been tested and work properly
+# note: do not use these functions with s = 1, use the mm1k functions instead
 def mmsk_model_compute_Pzero(lam, miu, k, s):
     """Computes the probability of zero clients in the mmsk model
     param lam: Arrival rate
@@ -342,17 +349,24 @@ def mmsk_model_compute_Pzero(lam, miu, k, s):
     param k: Capacity of the system
     param s: number of servers
     return: Pzero = Probability of zero clients"""
-    Pzero = 0
-    rho = lam / miu
-    first_sum = 0
-    second_sum = 0
-    for n in range(s):
-        first_sum += pow(rho, n) / m.factorial(n)
-        first_sum += pow(rho, s) / m.factorial(s)
-    for n in range(s + 1, k):
-        second_sum += pow(lam / (s * miu), n - s)
-    Pzero = 1 / (first_sum * second_sum)
+    rho = lam / (s * miu)
+    first_sum = sum(pow((lam / miu), n) / m.factorial(n) for n in range(s + 1))
+    constant = pow((lam / miu), s) / m.factorial(s)
+    second_sum = sum(pow(rho, n - s) for n in range(s + 1, k + 1))
+    Pzero = 1 / (first_sum + (constant * second_sum))
     return Pzero
+
+
+def mmsk_model_compute_average_lambda(lam, miu, k, s):
+    """computes the average arrival rate in a M/M/s/k queueing system.
+    param lam: Arrival rate
+    param miu: Service rate
+    param k: Capacity of the system
+    param s: number of servers
+    return: average_lambda = average arrival rate"""
+    Pk = mmsk_model_compute_Pn(lam, miu, k, s, k)
+    average_lambda = lam * (1 - Pk)
+    return average_lambda
 
 
 def mmsk_model_compute_Pn(lam, miu, k, s, n):
@@ -367,9 +381,9 @@ def mmsk_model_compute_Pn(lam, miu, k, s, n):
     Pzero = mmsk_model_compute_Pzero(lam, miu, k, s)
     if n < s:
         Pn = (pow((lam / miu), n) / m.factorial(n)) * Pzero
-    elif n >= s and n <= k:
-        Pn = pow((lam / miu), n) / (m.factorial(s) * pow(s, n - s))
-    else:
+    elif s <= n <= k:
+        Pn = (pow((lam / miu), n) / (m.factorial(s) * pow(s, n - s))) * Pzero
+    elif n > k:
         Pn = 0
     return Pn
 
@@ -383,8 +397,8 @@ def mmsk_model_compute_Lq(lam, miu, k, s):
     return: Lq = Expected number of clients in queue"""
     Pzero = mmsk_model_compute_Pzero(lam, miu, k, s)
     rho = lam / (s * miu)
-    Lq = (pow(rho, s + 1) * Pzero) / (m.factorial(s) * pow(1 - rho, 2))
-    Lq = Lq * (1 - pow(rho, k - s) - ((k - s) * pow(rho, k - s) * (1 - rho)))
+    Lq = (pow((lam / miu), s) * Pzero * rho) / (m.factorial(s) * pow(1 - rho, 2))
+    Lq *= 1 - pow(rho, k - s) - ((k - s) * pow(rho, k - s) * (1 - rho))
     return Lq
 
 
@@ -397,12 +411,13 @@ def mmsk_model_compute_L(lam, miu, k, s):
     return: L = Expected number of clients"""
     L = 0
     Lq = mmsk_model_compute_Lq(lam, miu, k, s)
-    for n in range(s - 1):
-        first_sum += n * mmsk_model_compute_Pn(lam, miu, k, s, n) + Lq
-        second_sum = 0
-        for n in range(s - 1):
-            second_sum += mmsk_model_compute_Pn(lam, miu, k, s, n)
-        L = first_sum + s * (1 - second_sum)
+    first_sum = 0
+    second_sum = 0
+    for n in range(s):
+        first_sum += n * mmsk_model_compute_Pn(lam, miu, k, s, n)
+    for n in range(s):
+        second_sum += mmsk_model_compute_Pn(lam, miu, k, s, n)
+    L = first_sum + Lq + s * (1 - second_sum)
     return L
 
 
@@ -415,7 +430,7 @@ def mmsk_model_compute_W(lam, miu, k, s):
     return: W = Expected waiting time in system"""
     W = 0
     L = mmsk_model_compute_L(lam, miu, k, s)
-    W = L / mm1k_model_compute_average_lambda(lam, miu, k)
+    W = L / mmsk_model_compute_average_lambda(lam, miu, k, s)
     return W
 
 
@@ -428,7 +443,7 @@ def mmsk_model_compute_Wq(lam, miu, k, s):
     return: Wq = Expected waiting time in queue"""
     Wq = 0
     Lq = mmsk_model_compute_Lq(lam, miu, k, s)
-    Wq = Lq / mm1k_model_compute_average_lambda(lam, miu, k)
+    Wq = Lq / mmsk_model_compute_average_lambda(lam, miu, k, s)
     return Wq
 
 
@@ -663,7 +678,7 @@ def queueing_theory_compute_Ls(L, Lq):
 
 
 def queueing_theory_compute_service_time_from_waits(W, Wq):
-    """ "computes the expected avarage waiting time to complete a service
+    """ "computes the expected average waiting time to complete a service
     param: W = expected waiting time in the system
     param: Wq = expected waiting time in the queue
     return: expected_service_time"""
@@ -672,7 +687,7 @@ def queueing_theory_compute_service_time_from_waits(W, Wq):
 
 
 def queueing_theory_compute_service_rate_from_waits(W, Wq):
-    """ "computes the expected avarage waiting time to complete a service
+    """ "computes the expected average waiting time to complete a service
     param: W = expected waiting time in the system
     param: Wq = expected waiting time in the queue
     return: expected_service_time"""
@@ -681,7 +696,7 @@ def queueing_theory_compute_service_rate_from_waits(W, Wq):
 
 
 def queueing_theory_compute_service_time_from_miu(miu):
-    """ "computes the expected avarage waiting time to complete a service
+    """ "computes the expected average waiting time to complete a service
     param: miu = average service rate
     return: expected_service_time"""
     expected_service_time = 1 / miu
@@ -689,7 +704,7 @@ def queueing_theory_compute_service_time_from_miu(miu):
 
 
 def queueing_theory_compute_interarrival_time(lam):
-    """computes the expected avarage waiting time to complete a service
+    """computes the expected average waiting time to complete a service
     param: lam = average arrival rate
     return: Ws = expected waiting time in the system"""
     expected_interarrival_time = 1 / lam
