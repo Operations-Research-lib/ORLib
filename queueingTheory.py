@@ -3,6 +3,9 @@ import numpy as np
 
 
 # -------------------------M/M/1-------------------------------------------------
+# all the functions in this section are based on the equations of the M/M/1 model
+# as described in the book "Introduction to Operations Research" by Hillier and Lieberman
+# note: all functions have been tested and work properly
 def mm1_model_info(lam, miu):
     """computes the basic information of a M/M/1 queueing system.
     param lam: Arrival rate
@@ -12,11 +15,11 @@ def mm1_model_info(lam, miu):
         print("The system is unstable")
         return None
     system_info = np.zeros(5)
-    system_info[0] = lam / miu
-    system_info[1] = pow(lam, 2) / (miu * (miu - lam))
-    system_info[2] = lam / (miu - lam)
-    system_info[3] = lam / (miu * (miu - lam))
-    system_info[4] = 1 / (miu - lam)
+    system_info[0] = mm1_model_compute_rho(lam, miu)
+    system_info[1] = mm1_model_compute_Lq(lam, miu)
+    system_info[2] = mm1_model_compute_L(lam, miu)
+    system_info[3] = mm1_model_compute_Wq(lam, miu)
+    system_info[4] = mm1_model_compute_W(lam, miu)
     return system_info
 
 
@@ -92,19 +95,27 @@ def mm1_model_compute_Pn(lam, miu, n):
     return Pn
 
 
-# -------------------------M/M/s-------------------------------------------------
+# -------------------------M/M/s------------------------------------------------
+# all the functions in this section are based on the equations of the M/M/s model
+# as described in the book "Introduction to Operations Research" by Hillier and Lieberman
+# note: all functions have been tested and work properly
+
+
 def mms_model_compute_Pzero(lam, miu, s):
     """computes the probability of zero clients in a M/M/s queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param s: Number of servers
     return: Pzero = Probability of zero clients"""
-    Pzero = 0
+    denominator = 0
     rho = lam / (s * miu)
+    if rho >= 1:
+        print("The system is unstable")
+        return None
     for n in range(s):
-        Pzero += pow((lam / miu), n) / m.factorial(n)
-        Pzero += (pow((lam / miu), s) / (m.factorial(s))) * (1 / (1 - rho))
-    Pzero = 1 / Pzero
+        denominator += pow((lam / miu), n) / m.factorial(n)
+    denominator += (pow((lam / miu), s) / (m.factorial(s))) * (1 / (1 - rho))
+    Pzero = 1 / denominator
     return Pzero
 
 
