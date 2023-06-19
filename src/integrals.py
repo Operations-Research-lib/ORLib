@@ -12,4 +12,5 @@ result = smp.integrate(function, x)
 # Pretty print to see it more clearly
 smp.pprint(result)
 
+print(smp.latex(result))
 
