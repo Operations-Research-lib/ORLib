@@ -2,6 +2,7 @@ import random
 import math
 import sympy as smp
 import numpy as np
+from scipy import stats
 
 
 def random_mixed_congruential_generator(a, c, m, x_zero, upper_bound):
@@ -89,7 +90,7 @@ def integrate_and_find_inverse(function):
     n_variables_to_generate (int): number of random variables to generate
 
     Returns:
-    None
+    integrated, inverse
     """
     x = smp.symbols("x", real=True)
     print("Function f(x): ")
@@ -105,6 +106,7 @@ def integrate_and_find_inverse(function):
         inverse = smp.sympify(inverse)
         print("Inverse")
         smp.pprint(inverse)
+        return [integrated, inverse]
     except smp.PolynomialError:
         print("Error: The inverse of the function cannot be calculated.")
         return
@@ -148,29 +150,74 @@ def generate_acceptance_rejection_with_symp(a, b, function, upper_limit):
     return None
 
 
-from scipy import stats
-
-
-def inverse_transform_sampling(n_samples, dist_name="norm", *args, **kwargs):
+def inverse_transform_sampling(
+    n_samples, dist_name="norm", lower_bound=None, upper_bound=None, *args, **kwargs
+):
     """
     Function to generate random observations based on the inverse transform method
 
     Parameters:
     - n_samples: int, number of random variables to generate
     - dist_name: str, name of the distribution to sample from (default is 'norm')
+    - lower_bound: float, minimum value for generated numbers (default is None)
+    - upper_bound: float, maximum value for generated numbers (default is None)
     - *args, **kwargs: distribution-specific parameters
 
     Returns:
     - rvs: array of generated random variables
     """
-
     # Define the distribution
     dist = getattr(stats, dist_name)
+    rvs = []
+    while len(rvs) < n_samples:
+        # Generate a uniform random variable
+        U = np.random.uniform(0, 1)
+        # Transform the uniform random variable
+        rv = dist.ppf(U, *args, **kwargs)
+        # Check if the generated number is in the desired range
+        if (lower_bound is not None and rv < lower_bound) or (
+            upper_bound is not None and rv > upper_bound
+        ):
+            continue
+        print(f"radom number used = {U}, used to generated random sampling = {rv}")
+        rvs.append(rv)
+    return np.array(rvs)
 
-    # Generate uniform random variables
-    U = np.random.uniform(0, 1, n_samples)
 
-    # Use the ppf (inverse of cdf) function to transform the uniform random variables
-    rvs = dist.ppf(U, *args, **kwargs)
+def user_inverse_transform_sampling_from_inverse(
+    n_samples, inverse, lower_bound=None, upper_bound=None
+):
+    """
+    Function to generate random observations based on the inverse transform method with user-defined inverse function.
 
-    return rvs
+    Parameters:
+    - n_samples: int, number of random variables to generate
+    - inverse: sympy expression, inverse of the cumulative distribution function
+    - lower_bound: float, minimum value for generated numbers (default is None)
+    - upper_bound: float, maximum value for generated numbers (default is None)
+
+    Returns:
+    - rvs: array of generated random variables
+    """
+
+    # Convert sympy expression into a callable function
+    r = smp.symbols("r")
+    inverse_func = smp.lambdify(r, inverse, "numpy")
+
+    rvs = []
+    while len(rvs) < n_samples:
+        # Generate a uniform random variable
+        U = random.uniform(0, 1)
+
+        # Transform the uniform random variable
+        rv = inverse_func(U)
+
+        # Check if the generated number is in the desired range
+        if (lower_bound is not None and rv < lower_bound) or (
+            upper_bound is not None and rv > upper_bound
+        ):
+            continue
+        print(f"radom number used = {U}, used to generated random sampling = {rv}")
+        rvs.append(rv)
+
+    return np.array(rvs)
