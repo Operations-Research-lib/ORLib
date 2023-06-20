@@ -81,14 +81,10 @@ def generate_acceptance_rejection(m, a, b, function, upper_limit):
     return evaluation_image
 
 
-def generate_random_variables_with_inverse_transform(
-    a, b, function, n_variables_to_generate
-):
-    """Calculates random observations from a function within a given range [a,b]
+def integrate_and_find_inverse(function):
+    """Computes integral and inverse of a given function
 
     Parameters:
-    a (float): lower bound of the range
-    b (float): upper bound of the range
     function (sympy expression): function expression
     n_variables_to_generate (int): number of random variables to generate
 
@@ -96,14 +92,13 @@ def generate_random_variables_with_inverse_transform(
     None
     """
     x = smp.symbols("x", real=True)
-    print("Function: ")
+    print("Function f(x): ")
     smp.pprint(function)
     integrated = smp.integrate(function, x)
-    print("Integral of F(x)")
+    print("Integral F(x)")
     smp.pprint(integrated)
-    n = n_variables_to_generate
-    y = smp.symbols("y", real=True)
-    eq = smp.Eq(integrated, y)
+    r = smp.symbols("r", real=True)
+    eq = smp.Eq(integrated, r)
 
     try:
         inverse = smp.solve(eq, x)
@@ -113,19 +108,6 @@ def generate_random_variables_with_inverse_transform(
     except smp.PolynomialError:
         print("Error: The inverse of the function cannot be calculated.")
         return
-
-    sequence_x = []
-    sequence_y = []
-
-    for _ in range(n):
-        r_value = random.uniform(a, b)
-        x_value = inverse[0].subs(y, r_value).evalf()
-        sequence_y.append(r_value)
-        sequence_x.append(x_value)
-
-    print("\nThe random variables generated in interval [a, b] are as follow:")
-    for i in range(n):
-        print(f"X generated: {sequence_x[i]} - with r: {sequence_y[i]}")
 
 
 def generate_acceptance_rejection_with_symp(a, b, function, upper_limit):
@@ -166,18 +148,29 @@ def generate_acceptance_rejection_with_symp(a, b, function, upper_limit):
     return None
 
 
-# example of inverse transformation
-# define the function
-# x = smp.symbols("x", real=True)
-# function = x + 5  # this is your mathematical function
-# use the function to generate random variables
-# generate_random_variables_with_inverse_transform(0, 1, function, 10)
-# Define your bounds and upper limit
-# a = 0
-# b = 1
-# upper_limit = 10000
-# examples of acceptance rejection
-# Use the function to generate a random number
-# random_number = generate_acceptance_rejection_with_symp(a, b, function, upper_limit)
+from scipy import stats
 
-# print("\nGenerated random number: ", random_number)
+
+def inverse_transform_sampling(n_samples, dist_name="norm", *args, **kwargs):
+    """
+    Function to generate random observations based on the inverse transform method
+
+    Parameters:
+    - n_samples: int, number of random variables to generate
+    - dist_name: str, name of the distribution to sample from (default is 'norm')
+    - *args, **kwargs: distribution-specific parameters
+
+    Returns:
+    - rvs: array of generated random variables
+    """
+
+    # Define the distribution
+    dist = getattr(stats, dist_name)
+
+    # Generate uniform random variables
+    U = np.random.uniform(0, 1, n_samples)
+
+    # Use the ppf (inverse of cdf) function to transform the uniform random variables
+    rvs = dist.ppf(U, *args, **kwargs)
+
+    return rvs
