@@ -107,6 +107,7 @@ def generate_random_variables_with_inverse_transform(
 
     try:
         inverse = smp.solve(eq, x)
+        inverse = smp.sympify(inverse)
         print("Inverse")
         smp.pprint(inverse)
     except smp.PolynomialError:
