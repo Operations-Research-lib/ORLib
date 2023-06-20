@@ -96,13 +96,19 @@ def generate_random_variables_with_inverse_transform(
     None
     """
     x = smp.symbols("x", real=True)
+    print("Function: ")
+    smp.pprint(function)
     integrated = smp.integrate(function, x)
+    print("Integral of F(x)")
+    smp.pprint(integrated)
     n = n_variables_to_generate
     y = smp.symbols("y", real=True)
     eq = smp.Eq(integrated, y)
 
     try:
         inverse = smp.solve(eq, x)
+        print("Inverse")
+        smp.pprint(inverse)
     except smp.PolynomialError:
         print("Error: The inverse of the function cannot be calculated.")
         return
@@ -159,18 +165,18 @@ def generate_acceptance_rejection_with_symp(a, b, function, upper_limit):
     return None
 
 
-# # example of inverse transformation
-# # define the function
+# example of inverse transformation
+# define the function
 # x = smp.symbols("x", real=True)
 # function = x + 5  # this is your mathematical function
-# # use the function to generate random variables
+# use the function to generate random variables
 # generate_random_variables_with_inverse_transform(0, 1, function, 10)
-# # Define your bounds and upper limit
+# Define your bounds and upper limit
 # a = 0
 # b = 1
 # upper_limit = 10000
-# # examples of acceptance rejection
-# # Use the function to generate a random number
+# examples of acceptance rejection
+# Use the function to generate a random number
 # random_number = generate_acceptance_rejection_with_symp(a, b, function, upper_limit)
 
 # print("\nGenerated random number: ", random_number)
