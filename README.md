@@ -6,9 +6,7 @@
 
 + [Luis Solano](https://github.com/GoninDS)
 
-### **Integral use examples:**
 
-TODO(Luis): Finish
 
 ### **Requirements:**
 
