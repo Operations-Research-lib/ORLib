@@ -48,17 +48,6 @@ def uniform_random_from_mixed_congruential_generator(a, c, m, x_zero, upper_boun
         it += 1
     return numbers_generated
 
-
-"""
-    Example:
-    a = 10
-    b = 20
-    m = 1.0/50.0 * (20.0 - 10.0)
-    function = "1.0/50.0 * (x - 10.0)"
-    print(generate_acceptance_rejection(m, a, b, function, 100))
-"""
-
-
 def generate_acceptance_rejection(m, a, b, function, upper_limit):
     """Calculates a random observation from a function that has a range [a,b]
     using the acceptance
