@@ -6,6 +6,7 @@
 
 + [Luis Solano](https://github.com/GoninDS)
 
++ [Jorge Sagot](https://github.com/JirlOP)
 
 
 ### **Requirements:**
