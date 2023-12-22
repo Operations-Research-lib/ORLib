@@ -5,9 +5,9 @@ import queueing_theory as qt
 
 
 class TestMm1:
-    """Class to test the M/M/1 queueing model"""
+    """Class to test the M/M/1 queueing theory model"""
 
-    def test_mm1_model_compute_rho(self):
+    def test_mm1_model_compute_rho_expected_valid_output(self):
         """
         Test case for mm1_model_compute_rho function.
 
@@ -20,6 +20,7 @@ class TestMm1:
         lam_input = 8
         miu_input = 10
         expected_output = 0.8
+
         rho_calc = qt.mm1_model_compute_rho(lam = lam_input, miu = miu_input)
 
         assert rho_calc != 0, "rho is equal to 0"
