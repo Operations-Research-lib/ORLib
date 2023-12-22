@@ -6,13 +6,17 @@ import numpy as np
 # all the functions in this section are based on the equations of the M/M/1 model
 # as described in the book "Introduction to Operations Research" by Hillier and Lieberman
 # note: all functions have been tested and work properly
+UNSTABLE_MESSAGE = "The system is unstable"
+NEGATIVE_INPUT_ERROR = "Lamda and miu cannot be negative or 0"
+
+
 def mm1_model_info(lam, miu):
     """computes the basic information of a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     return: system_info = [rho, Lq, L, Wq, W]"""
     if lam == miu:
-        print("The system is unstable")
+        print(UNSTABLE_MESSAGE)
         return None
     system_info = np.zeros(5)
     system_info[0] = mm1_model_compute_rho(lam, miu)
@@ -101,22 +105,23 @@ def mm1_model_compute_Pn(lam, miu, n):
 # note: all functions have been tested and work properly
 
 
-def mms_model_compute_Pzero(lam, miu, s):
+def mms_model_compute_p_zero(lam, miu, s):
     """computes the probability of zero clients in a M/M/s queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param s: Number of servers
     return: Pzero = Probability of zero clients"""
+    if lam <= 0 or miu <= 0 or s <= 0:
+        raise NameError(NEGATIVE_INPUT_ERROR)
     denominator = 0
     rho = lam / (s * miu)
     if rho >= 1:
-        print("The system is unstable")
-        return None
+        raise NameError(UNSTABLE_MESSAGE)
     for n in range(s):
         denominator += pow((lam / miu), n) / m.factorial(n)
     denominator += (pow((lam / miu), s) / (m.factorial(s))) * (1 / (1 - rho))
-    Pzero = 1 / denominator
-    return Pzero
+    p_zero = 1 / denominator
+    return p_zero
 
 
 def mms_model_info(lam, miu, s):
@@ -128,8 +133,7 @@ def mms_model_info(lam, miu, s):
     # calculate rho to determine if the system is stable
     rho = lam / (s * miu)
     if rho >= 1:
-        print("The system is unstable")
-        return None
+        raise NameError(UNSTABLE_MESSAGE)
     # calculate the basic information
     system_info = np.zeros(6)
     system_info[0] = rho
@@ -155,8 +159,7 @@ def mms_model_compute_Lq(lam, miu, s):
     Lq = 0
     rho = lam / (s * miu)
     if rho >= 1:
-        print("The system is unstable")
-        return None
+        raise NameError(UNSTABLE_MESSAGE)
     Pzero = mms_model_compute_Pzero(lam, miu, s)
     Lq = (Pzero * pow((lam / miu), s) * rho) / (m.factorial(s) * pow(1 - rho, 2))
     return Lq
