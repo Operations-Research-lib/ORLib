@@ -113,10 +113,10 @@ def mms_model_compute_p_zero(lam, miu, s):
     return: Pzero = Probability of zero clients"""
     if lam <= 0 or miu <= 0 or s <= 0:
         raise NameError(NEGATIVE_INPUT_ERROR)
-    denominator = 0
     rho = lam / (s * miu)
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
+    denominator = 0
     for n in range(s):
         denominator += pow((lam / miu), n) / m.factorial(n)
     denominator += (pow((lam / miu), s) / (m.factorial(s))) * (1 / (1 - rho))
@@ -131,6 +131,8 @@ def mms_model_info(lam, miu, s):
     param s: Number of servers
     return: system_info = [rho, Pzero, Lq, L, Wq, W]"""
     # calculate rho to determine if the system is stable
+    if lam <= 0 or miu <= 0 or s <= 0:
+        raise NameError(NEGATIVE_INPUT_ERROR)
     rho = lam / (s * miu)
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -156,6 +158,8 @@ def mms_model_compute_lq(lam, miu, s):
     param miu: Service rate
     param s: Number of servers
     return: Lq = Average number of clients in the queue"""
+    if lam <= 0 or miu <= 0 or s <= 0:
+        raise NameError(NEGATIVE_INPUT_ERROR)
     rho = lam / (s * miu)
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
