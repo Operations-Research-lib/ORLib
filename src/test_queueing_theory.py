@@ -267,3 +267,57 @@ class TestMm1:
                 qt.mm1_model_compute_w(lam = lam_input, miu = miu_input)
             # assert
             assert str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+
+
+    def test_mm1_model_compute_pn_expected_valid_output(self):
+        """
+        Test case for mm1_model_compute_pn function.
+
+        This function tests the calculation of pn, n = 0,1,2.
+        """
+        # arrange
+        input_output_cases = [(20,30,0,1/3), (20,30,1,2/9), (20,30,2,4/27)]
+
+        for lam_input, miu_input, n_input, expected_output in input_output_cases:
+            # act
+            wq_calc = qt.mm1_model_compute_pn(lam = lam_input, miu = miu_input, n = n_input)
+            # assert
+            assert wq_calc != 0, "pn is equal to 0"
+            assert ma.isclose(wq_calc, expected_output,
+                            rel_tol=1e-9), "pn is not approximately equal"
+
+
+    def test_mm1_model_compute_pn_unstable_system_input_raises_exception(self):
+        """
+        Test case for mm1_model_compute_pn function.
+
+        This function tests if the input raise an exception when the system is
+        unstable.
+        """
+        # arrange
+        input_cases = [(10,10,1), (10,5,1)]
+
+        for lam_input, miu_input, n_input in input_cases:
+            with raises(Exception) as exception_info:
+                # act
+                qt.mm1_model_compute_pn(lam = lam_input, miu = miu_input, n = n_input)
+            # assert
+            assert str(exception_info.value) == qt.UNSTABLE_MESSAGE
+
+
+    def test_mm1_model_compute_pn_negative_zero_input_raises_exception(self):
+        """
+        Test case for mm1_model_compute_pn function.
+
+        This function tests if some input have negative or zero values.
+        """
+
+        # arrange
+        input_cases = [(-10,10,1), (10,-10,1), (10,0,1), (0,10,1), (10,10,-1)]
+
+        for lam_input, miu_input, n_input in input_cases:
+            with raises(Exception) as exception_info:
+                # act
+                qt.mm1_model_compute_pn(lam = lam_input, miu = miu_input, n = n_input)
+            # assert
+            assert str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
