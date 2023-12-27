@@ -102,7 +102,7 @@ def mm1_model_compute_pn(lam, miu, n):
     param miu: Service rate
     param n: Number of clients
     return: Pn = Probability of n clients"""
-    if lam <= 0 or miu <= 0:
+    if lam <= 0 or miu <= 0 or n < 0:
         raise NameError(NEGATIVE_INPUT_ERROR)
     rho = lam / miu
     if rho >= 1:
