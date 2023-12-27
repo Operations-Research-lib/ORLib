@@ -12,20 +12,39 @@ class TestMm1:
         Test case for mm1_model_compute_rho function.
 
         This function tests the calculation of rho (traffic intensity) in the M/M/1
-        queueing model.
-        It verifies that the calculated value of rho is not equal to 0 and is
-        approximately equal to 0.8.
-
+        queueing model with valid inputs.
         """
-        lam_input = 8
-        miu_input = 10
-        expected_output = 0.8
+        # arrange
+        lam_input = 20
+        miu_input = 30
+        expected_output = 2/3
 
+        # act
         rho_calc = qt.mm1_model_compute_rho(lam = lam_input, miu = miu_input)
 
+        # assert
         assert rho_calc != 0, "rho is equal to 0"
         assert ma.isclose(rho_calc, expected_output,
                           rel_tol=1e-9), "rho is not approximately equal to 0.8"
+
+
+    def test_mm1_model_compute_rho_negative_zero_input_raises_exception(self):
+        """
+        Test case for mm1_model_compute_rho function.
+
+        This function tests if some input have negative or zero values. Expected
+        output is an exception.
+        """
+        # arrange
+        input_cases = [(-10,10), (10,-10), (10,0), (0,10)]
+
+        for lam_input, miu_input in input_cases:
+            with raises(Exception) as exception_info:
+                # act
+                qt.mm1_model_compute_rho(lam = lam_input, miu = miu_input)
+
+            # assert
+            assert str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
 
 
     def test_mm1_model_compute_wq_expected_valid_output(self):
