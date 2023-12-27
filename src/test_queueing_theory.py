@@ -101,6 +101,60 @@ class TestMm1:
             assert str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
 
 
+    def test_mm1_model_compute_l_expected_valid_output(self):
+        """
+        Test case for mm1_model_compute_l function.
+
+        This function tests the calculation of L in the M/M/1 queueing model.
+        """
+        lam_input = 20
+        miu_input = 30
+        expected_output = 2
+
+        lq_calc = qt.mm1_model_compute_l(lam = lam_input, miu = miu_input)
+
+        assert lq_calc != 0, "L is equal to 0"
+        assert ma.isclose(lq_calc, expected_output,
+                          rel_tol=1e-9), "L is not approximately equal to 2"
+
+
+    def test_mm1_model_compute_l_unstable_system_input_raises_exception(self):
+        """
+        Test case for mm1_model_compute_l function.
+
+        This function test if the input raise an exception when the system is
+        unstable.
+        """
+        # arrange
+        input_cases = [(10,10), (10,5)]
+
+        for lam_input, miu_input in input_cases:
+            with raises(Exception) as exception_info:
+                # act
+                qt.mm1_model_compute_l(lam = lam_input, miu = miu_input)
+            # assert
+            assert str(exception_info.value) == qt.UNSTABLE_MESSAGE
+
+
+    def test_mm1_model_compute_l_negative_zero_input_raises_exception(self):
+        """
+        Test case for mm1_model_compute_l function.
+
+        This function tests if some input have negative or zero values.
+        """
+
+        # arrange
+        input_cases = [(-10,10), (10,-10), (10,0), (0,10)]
+
+        for lam_input, miu_input in input_cases:
+            with raises(Exception) as exception_info:
+                # act
+                qt.mm1_model_compute_l(lam = lam_input, miu = miu_input)
+            # assert
+            assert str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+
+
+
     def test_mm1_model_compute_wq_expected_valid_output(self):
         """
         Test case for mm1_model_compute_wq function.
