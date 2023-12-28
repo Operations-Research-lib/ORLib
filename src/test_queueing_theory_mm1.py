@@ -1,11 +1,71 @@
 """Module providing unit test for queueing_theory"""
 import math as ma
-from pytest import raises
+from pytest import approx, raises
 import queueing_theory as qt
 
 
 class TestMm1:
     """Class to test the M/M/1 queueing theory model"""
+
+
+    def test_mm1_model_info_expected_valid_output(self):
+        """
+        Test case for mm1_model_info function.
+
+        This function tests the calculation of the M/M/1 queueing model with valid
+        inputs.
+        """
+        # arrange
+        lam_input = 20
+        miu_input = 30
+        expected_outputs = [2/3, 4/3, 2, 1/15, 1/10]
+
+        # act
+        mm1_expected_info = qt.mm1_model_info(lam = lam_input, miu = miu_input)
+
+        # assert
+        assert len(mm1_expected_info) == 5
+        for i, expected_info_output in enumerate(mm1_expected_info):
+            assert expected_info_output != 0, "One of the outputs is equal to 0"
+            assert expected_info_output == approx(expected_outputs[i], rel=1e-9)
+
+
+
+    def test_mm1_model_info_unstable_system_input_raises_exception(self):
+        """
+        Test case for mm1_model_compute_lq function.
+
+        This function test if the input raise an exception when the system is
+        unstable.
+        """
+        # arrange
+        input_cases = [(10,10), (10,5)]
+
+        for lam_input, miu_input in input_cases:
+            with raises(Exception) as exception_info:
+                # act
+                qt.mm1_model_info(lam = lam_input, miu = miu_input)
+            # assert
+            assert str(exception_info.value) == qt.UNSTABLE_MESSAGE
+
+
+    def test_mm1_model_info_negative_zero_input_raises_exception(self):
+        """
+        Test case for mm1_model_compute_lq function.
+
+        This function tests if some input have negative or zero values.
+        """
+
+        # arrange
+        input_cases = [(-10,10), (10,-10), (10,0), (0,10)]
+
+        for lam_input, miu_input in input_cases:
+            with raises(Exception) as exception_info:
+                # act
+                qt.mm1_model_info(lam = lam_input, miu = miu_input)
+            # assert
+            assert str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+
 
     def test_mm1_model_compute_rho_expected_valid_output(self):
         """
