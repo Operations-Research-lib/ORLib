@@ -1,5 +1,4 @@
 """Module providing unit test for queueing_theory"""
-import math as ma
 from pytest import approx, raises
 import queueing_theory as qt
 
@@ -27,7 +26,7 @@ class TestMm1:
         assert len(mm1_expected_info) == 5
         for i, expected_info_output in enumerate(mm1_expected_info):
             assert expected_info_output != 0, "One of the outputs is equal to 0"
-            assert expected_info_output == approx(expected_outputs[i], rel=1e-9)
+            assert expected_info_output == approx(expected_outputs[i])
 
 
 
@@ -55,7 +54,6 @@ class TestMm1:
 
         This function tests if some input have negative or zero values.
         """
-
         # arrange
         input_cases = [(-10,10), (10,-10), (10,0), (0,10)]
 
@@ -84,8 +82,7 @@ class TestMm1:
 
         # assert
         assert rho_calc != 0, "rho is equal to 0"
-        assert ma.isclose(rho_calc, expected_output,
-                          rel_tol=1e-9), "rho is not approximately equal to 0.8"
+        assert rho_calc == approx(expected_output)
 
 
     def test_mm1_model_compute_rho_negative_zero_input_raises_exception(self):
@@ -114,15 +111,17 @@ class TestMm1:
 
         This function tests the calculation of Lq in the M/M/1 queueing model.
         """
+        # arrange
         lam_input = 20
         miu_input = 30
         expected_output = 4/3
 
+        # act
         lq_calc = qt.mm1_model_compute_lq(lam = lam_input, miu = miu_input)
 
+        # assert
         assert lq_calc != 0, "Lq is equal to 0"
-        assert ma.isclose(lq_calc, expected_output,
-                          rel_tol=1e-9), "Lq is not approximately equal to 1,333..."
+        assert lq_calc == approx(expected_output)
 
 
     def test_mm1_model_compute_lq_unstable_system_input_raises_exception(self):
@@ -149,7 +148,6 @@ class TestMm1:
 
         This function tests if some input have negative or zero values.
         """
-
         # arrange
         input_cases = [(-10,10), (10,-10), (10,0), (0,10)]
 
@@ -167,16 +165,17 @@ class TestMm1:
 
         This function tests the calculation of L in the M/M/1 queueing model.
         """
+        # arrange
         lam_input = 20
         miu_input = 30
         expected_output = 2
 
-        lq_calc = qt.mm1_model_compute_l(lam = lam_input, miu = miu_input)
+        # act
+        l_calc = qt.mm1_model_compute_l(lam = lam_input, miu = miu_input)
 
-        assert lq_calc != 0, "L is equal to 0"
-        assert ma.isclose(lq_calc, expected_output,
-                          rel_tol=1e-9), "L is not approximately equal to 2"
-
+        # assert
+        assert l_calc != 0, "L is equal to 0"
+        assert l_calc == approx(expected_output)
 
     def test_mm1_model_compute_l_unstable_system_input_raises_exception(self):
         """
@@ -232,9 +231,7 @@ class TestMm1:
 
         # assert
         assert wq_calc != 0, "Wq is equal to 0"
-        assert ma.isclose(wq_calc, expected_output,
-                          rel_tol=1e-9), "Wq is not approximately equal to 0.666..."
-
+        assert wq_calc == approx(expected_output)
 
     def test_mm1_model_compute_wq_unstable_system_input_raises_exception(self):
         """
@@ -260,7 +257,6 @@ class TestMm1:
 
         This function tests if some input have negative or zero values.
         """
-
         # arrange
         input_cases = [(-10,10), (10,-10), (10,0), (0,10)]
 
@@ -285,13 +281,11 @@ class TestMm1:
         expected_output = 1/10
 
         # act
-        wq_calc = qt.mm1_model_compute_w(lam = lam_input, miu = miu_input)
+        w_calc = qt.mm1_model_compute_w(lam = lam_input, miu = miu_input)
 
         # assert
-        assert wq_calc != 0, "w is equal to 0"
-        assert ma.isclose(wq_calc, expected_output,
-                          rel_tol=1e-9), "w is not approximately equal to 0.1"
-
+        assert w_calc != 0, "w is equal to 0"
+        assert w_calc == approx(expected_output)
 
     def test_mm1_model_compute_w_unstable_system_input_raises_exception(self):
         """
@@ -317,7 +311,6 @@ class TestMm1:
 
         This function tests if some input have negative or zero values.
         """
-
         # arrange
         input_cases = [(-10,10), (10,-10), (10,0), (0,10)]
 
@@ -340,12 +333,10 @@ class TestMm1:
 
         for lam_input, miu_input, n_input, expected_output in input_output_cases:
             # act
-            wq_calc = qt.mm1_model_compute_pn(lam = lam_input, miu = miu_input, n = n_input)
+            pn_calc = qt.mm1_model_compute_pn(lam = lam_input, miu = miu_input, n = n_input)
             # assert
-            assert wq_calc != 0, "pn is equal to 0"
-            assert ma.isclose(wq_calc, expected_output,
-                            rel_tol=1e-9), "pn is not approximately equal"
-
+            assert pn_calc != 0, "pn is equal to 0"
+            assert pn_calc == approx(expected_output)
 
     def test_mm1_model_compute_pn_unstable_system_input_raises_exception(self):
         """
@@ -371,7 +362,6 @@ class TestMm1:
 
         This function tests if some input have negative or zero values.
         """
-
         # arrange
         input_cases = [(-10,10,1), (10,-10,1), (10,0,1), (0,10,1), (10,10,-1)]
 
