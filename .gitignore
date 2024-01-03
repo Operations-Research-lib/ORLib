@@ -3,3 +3,5 @@ practica.py
 other.py
 src/__pycache__/queueing_theory.cpython-312.pyc
 src/__pycache__/test_queueing_theory.cpython-312-pytest-7.4.3.pyc
+src/test_queueing_theory_mms.py
+src/__pycache__
