@@ -8,6 +8,7 @@ import numpy as np
 # note: all functions have been tested and work properly
 UNSTABLE_MESSAGE = "The system is unstable"
 NEGATIVE_INPUT_ERROR = "Lamda and miu cannot be negative or 0"
+NEGATIVE_N_ERROR = "n cannot be negative to compute p_n"
 
 
 def mm1_model_info(lam, miu):
@@ -208,6 +209,8 @@ def mms_model_compute_p_n(lam, miu, s, n):
     param s: Number of servers
     param n: Number of clients
     return: Pn = Probability of n clients"""
+    if n < 0:
+        raise NameError(NEGATIVE_N_ERROR)
     p_zero = mms_model_compute_p_zero(lam, miu, s)
     p_n = 0
     if n == 0:
