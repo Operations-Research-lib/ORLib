@@ -43,7 +43,7 @@ def mm1_model_compute_Lq(lam, miu):
     param miu: Service rate
     return: Lq = Average number of clients in the queue"""
     if lam == miu:
-        print("The system is unstable")
+        print(UNSTABLE_MESSAGE)
         return None
     Lq = pow(lam, 2) / (miu * (miu - lam))
     return Lq
@@ -55,7 +55,7 @@ def mm1_model_compute_L(lam, miu):
     param miu: Service rate
     return: L = Average number of clients in the system"""
     if lam == miu:
-        print("The system is unstable")
+        print(UNSTABLE_MESSAGE)
         return None
     L = lam / (miu - lam)
     return L
@@ -67,7 +67,7 @@ def mm1_model_compute_Wq(lam, miu):
     param miu: Service rate
     return: Wq = Average waiting time in the queue"""
     if lam == miu:
-        print("The system is unstable")
+        print(UNSTABLE_MESSAGE)
         return None
     Wq = lam / (miu * (miu - lam))
     return Wq
@@ -79,7 +79,7 @@ def mm1_model_compute_W(lam, miu):
     param miu: Service rate
     return: W = Average waiting time in the system"""
     if lam == miu:
-        print("The system is unstable")
+        print(UNSTABLE_MESSAGE)
         return None
     W = 1 / (miu - lam)
     return W
