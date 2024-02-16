@@ -5,6 +5,7 @@ import numpy as np
 UNSTABLE_MESSAGE = "The system is unstable"
 NEGATIVE_INPUT_ERROR = "Lamda and miu cannot be negative or 0"
 NEGATIVE_N_ERROR = "n cannot be negative to compute p_n"
+NEGATIVE_ZERO_K_ERROR = "k cannot be negative or zero"
 
 # -------------------------M/M/1-------------------------------------------------
 # all the functions in this section are based on the equations of the M/M/1 model
@@ -250,6 +251,8 @@ def mm1k_model_compute_p_zero(lam, miu, k):
     param miu: Service rate
     param k: Capacity of the system
     return: Pzero = Probability of zero clients"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     rho = lam / miu
     p_zero = 0
     if rho == 1:
@@ -266,6 +269,8 @@ def mm1k_model_compute_pn(lam, miu, k, n):
     param k: Capacity of the system
     param n: Number of clients
     return: Pn = Probability of n clients"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     rho = lam / miu
     pn = 0
     if rho == 1:
@@ -280,6 +285,8 @@ def mm1k_model_compute_l(lam, miu, k):
     param rho: Utilization factor
     param k: Capacity of the system
     return: L = Expected number of clients"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     l = 0
     rho = lam / miu
     if rho == 1:
@@ -294,6 +301,8 @@ def mm1k_model_compute_lq(lam, miu, k):
     param rho: Utilization factor
     param k: Capacity of the system
     return: Lq = Expected number of clients in the queue"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     lq = 0
     l = mm1k_model_compute_l(lam, miu, k)
     p_zero = mm1k_model_compute_p_zero(lam, miu, k)
@@ -307,6 +316,8 @@ def mm1k_model_compute_w(lam, miu, k):
     param miu: Service rate
     param k: Capacity of the system
     return: W = Expected waiting time"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     w = 0
     l = mm1k_model_compute_l(lam, miu, k)
     w = l / mm1k_model_compute_average_lambda(lam, miu, k)
@@ -319,6 +330,8 @@ def mm1k_model_compute_wq(lam, miu, k):
     param miu: Service rate
     param k: Capacity of the system
     return: Wq = Expected waiting time in the queue"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     wq = 0
     lq = mm1k_model_compute_lq(lam, miu, k)
     wq = lq / mm1k_model_compute_average_lambda(lam, miu, k)
@@ -331,6 +344,8 @@ def mm1k_model_compute_average_lambda(lam, miu, k):
     param miu: Service rate
     param k: Capacity of the system
     return: average_lambda = average arrival rate"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     pk = mm1k_model_compute_pn(lam, miu, k, k)
     average_lambda = lam * (1 - pk)
     return average_lambda
