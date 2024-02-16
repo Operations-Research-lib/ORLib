@@ -4,6 +4,7 @@ import numpy as np
 
 UNSTABLE_MESSAGE = "The system is unstable"
 NEGATIVE_INPUT_ERROR = "Lamda and miu cannot be negative or 0"
+NEGATIVE_N_ERROR = "n cannot be negative to compute p_n"
 
 # -------------------------M/M/1-------------------------------------------------
 # all the functions in this section are based on the equations of the M/M/1 model
@@ -102,8 +103,10 @@ def mm1_model_compute_pn(lam, miu, n):
     param miu: Service rate
     param n: Number of clients
     return: Pn = Probability of n clients"""
-    if lam <= 0 or miu <= 0 or n < 0:
+    if lam <= 0 or miu <= 0:
         raise NameError(NEGATIVE_INPUT_ERROR)
+    elif n < 0:
+        raise NameError(NEGATIVE_N_ERROR)
     rho = lam / miu
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -238,7 +241,7 @@ def mms_model_compute_Pn(lam, miu, s, n):
 
 
 # -------------------------M/M/1/K----------------------------------------------
-# all the functions in this section are based on the equations of the M/M/s model
+# all the functions in this section are based on the equations of the M/M/1/K model
 # as described in the book "Introduction to Operations Research" by Hillier and Lieberman
 # note: all functions have been tested and work properly
 def mm1k_model_compute_p_zero(lam, miu, k):
