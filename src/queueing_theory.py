@@ -3,7 +3,7 @@ import math as m
 import numpy as np
 
 UNSTABLE_MESSAGE = "The system is unstable"
-NEGATIVE_INPUT_ERROR = "Lamda and miu cannot be negative or 0"
+NEGATIVE_ZERO_LAM_MIU_ERROR = "Lamda and miu cannot be negative or 0"
 NEGATIVE_N_ERROR = "n cannot be negative to compute p_n"
 NEGATIVE_ZERO_K_ERROR = "k cannot be negative or zero"
 
@@ -17,7 +17,7 @@ def mm1_model_info(lam, miu):
     param miu: Service rate
     return: system_info = [rho, Lq, L, Wq, W]"""
     if lam <= 0 or miu <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     # calculate rho to determine if the system is stable
     rho = lam / miu
     if rho >= 1:
@@ -37,7 +37,7 @@ def mm1_model_compute_rho(lam, miu):
     param miu: Service rate
     return: rho = Utilization factor"""
     if lam <= 0 or miu <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / miu
     return rho
 
@@ -48,7 +48,7 @@ def mm1_model_compute_lq(lam, miu):
     param miu: Service rate
     return: Lq = Average number of clients in the queue"""
     if lam <= 0 or miu <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / miu
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -62,7 +62,7 @@ def mm1_model_compute_l(lam, miu):
     param miu: Service rate
     return: L = Average number of clients in the system"""
     if lam <= 0 or miu <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / miu
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -76,7 +76,7 @@ def mm1_model_compute_wq(lam, miu):
     param miu: Service rate
     return: Wq = Average waiting time in the queue"""
     if lam <= 0 or miu <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / miu
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -90,7 +90,7 @@ def mm1_model_compute_w(lam, miu):
     param miu: Service rate
     return: W = Average waiting time in the system"""
     if lam <= 0 or miu <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / miu
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -105,7 +105,7 @@ def mm1_model_compute_pn(lam, miu, n):
     param n: Number of clients
     return: Pn = Probability of n clients"""
     if lam <= 0 or miu <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     elif n < 0:
         raise NameError(NEGATIVE_N_ERROR)
     rho = lam / miu

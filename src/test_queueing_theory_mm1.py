@@ -71,7 +71,7 @@ class TestMm1:
                 qt.mm1_model_info(lam = lam_input, miu = miu_input)
             # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid input in compute info"
 
 
@@ -115,7 +115,7 @@ class TestMm1:
 
             # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid input in compute rho"
 
 
@@ -178,7 +178,7 @@ class TestMm1:
                 qt.mm1_model_compute_lq(lam = lam_input, miu = miu_input)
             # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid input in compute lq"
 
 
@@ -240,7 +240,7 @@ class TestMm1:
                 qt.mm1_model_compute_l(lam = lam_input, miu = miu_input)
             # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid input in compute l."
 
 
@@ -303,7 +303,7 @@ class TestMm1:
                 qt.mm1_model_compute_wq(lam = lam_input, miu = miu_input)
             # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid input in compute wq"
 
 
@@ -365,7 +365,7 @@ class TestMm1:
                 qt.mm1_model_compute_w(lam = lam_input, miu = miu_input)
             # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid input in compute w."
 
 
@@ -409,21 +409,41 @@ class TestMm1:
             ),  "Did not raise error when system is unstable in compute pn."
 
 
-    def test_mm1_model_compute_pn_negative_zero_input_raises_exception(self):
+    def test_mm1_model_compute_pn_negative_zero_lam_miu_inputs_raises_exception(self):
         """
         Test case for mm1_model_compute_pn function.
 
-        This function tests if some input have negative or zero values.
+        This function tests if lambda or miu inputs have negative or zero values.
         """
         # arrange
-        ## (lam, miu, n)
-        input_cases = [(-10,10,1), (10,-10,1), (10,0,1), (0,10,1), (10,10,-1)]
+        n_input = 1
+        input_cases = [(-10,10), (10,-10), (10,0), (0,10)]
 
-        for lam_input, miu_input, n_input in input_cases:
+        for lam_input, miu_input in input_cases:
             with raises(NameError) as exception_info:
                 # act
                 qt.mm1_model_compute_pn(lam = lam_input, miu = miu_input, n = n_input)
             # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid input in compute pn"
+
+
+    def test_mm1k_model_compute_pn_negative_n_raises_exception(self):
+        """
+        Test case for mm1_model_compute_pn function.
+
+        This function tests if n input is negative.
+        """
+        # arrange
+        n_input = -1
+        lam_input = 20
+        miu_input = 30
+
+        with raises(NameError) as exception_info:
+            # act
+            qt.mm1_model_compute_pn(lam = lam_input, miu = miu_input, n = n_input)
+        # assert
+        assert (
+            str(exception_info.value) == qt.NEGATIVE_N_ERROR
+        ), "Did not raise error when invalid input in compute pn"
