@@ -1,30 +1,33 @@
+""" This module contains all the functions related to queueing theory """
 import math as m
 import numpy as np
 
+UNSTABLE_MESSAGE = "The system is unstable"
+NEGATIVE_ZERO_LAM_MIU_ERROR = "Lamda and miu cannot be negative or 0"
+NEGATIVE_N_ERROR = "n cannot be negative to compute p_n"
+NEGATIVE_ZERO_K_ERROR = "k cannot be negative or zero"
 
 # -------------------------M/M/1-------------------------------------------------
 # all the functions in this section are based on the equations of the M/M/1 model
 # as described in the book "Introduction to Operations Research" by Hillier and Lieberman
 # note: all functions have been tested and work properly
-UNSTABLE_MESSAGE = "The system is unstable"
-NEGATIVE_INPUT_ERROR = "Lamda and miu cannot be negative or 0"
-NEGATIVE_N_ERROR = "n cannot be negative to compute p_n"
-
-
 def mm1_model_info(lam, miu):
     """computes the basic information of a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     return: system_info = [rho, Lq, L, Wq, W]"""
-    if lam == miu:
-        print(UNSTABLE_MESSAGE)
-        return None
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
+    # calculate rho to determine if the system is stable
+    rho = lam / miu
+    if rho >= 1:
+        raise NameError(UNSTABLE_MESSAGE)
     system_info = np.zeros(5)
     system_info[0] = mm1_model_compute_rho(lam, miu)
-    system_info[1] = mm1_model_compute_Lq(lam, miu)
-    system_info[2] = mm1_model_compute_L(lam, miu)
-    system_info[3] = mm1_model_compute_Wq(lam, miu)
-    system_info[4] = mm1_model_compute_W(lam, miu)
+    system_info[1] = mm1_model_compute_lq(lam, miu)
+    system_info[2] = mm1_model_compute_l(lam, miu)
+    system_info[3] = mm1_model_compute_wq(lam, miu)
+    system_info[4] = mm1_model_compute_w(lam, miu)
     return system_info
 
 
@@ -33,71 +36,87 @@ def mm1_model_compute_rho(lam, miu):
     param lam: Arrival rate
     param miu: Service rate
     return: rho = Utilization factor"""
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / miu
     return rho
 
 
-def mm1_model_compute_Lq(lam, miu):
+def mm1_model_compute_lq(lam, miu):
     """computes the average number of clients in the queue of a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     return: Lq = Average number of clients in the queue"""
-    if lam == miu:
-        print(UNSTABLE_MESSAGE)
-        return None
-    Lq = pow(lam, 2) / (miu * (miu - lam))
-    return Lq
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
+    rho = lam / miu
+    if rho >= 1:
+        raise NameError(UNSTABLE_MESSAGE)
+    lq = pow(lam, 2) / (miu * (miu - lam))
+    return lq
 
 
-def mm1_model_compute_L(lam, miu):
+def mm1_model_compute_l(lam, miu):
     """computes the average number of clients in the system of a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     return: L = Average number of clients in the system"""
-    if lam == miu:
-        print(UNSTABLE_MESSAGE)
-        return None
-    L = lam / (miu - lam)
-    return L
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
+    rho = lam / miu
+    if rho >= 1:
+        raise NameError(UNSTABLE_MESSAGE)
+    l = lam / (miu - lam)
+    return l
 
 
-def mm1_model_compute_Wq(lam, miu):
+def mm1_model_compute_wq(lam, miu):
     """computes the average waiting time in the queue of a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     return: Wq = Average waiting time in the queue"""
-    if lam == miu:
-        print(UNSTABLE_MESSAGE)
-        return None
-    Wq = lam / (miu * (miu - lam))
-    return Wq
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
+    rho = lam / miu
+    if rho >= 1:
+        raise NameError(UNSTABLE_MESSAGE)
+    wq = lam / (miu * (miu - lam))
+    return wq
 
 
-def mm1_model_compute_W(lam, miu):
+def mm1_model_compute_w(lam, miu):
     """computes the average waiting time in the system of a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     return: W = Average waiting time in the system"""
-    if lam == miu:
-        print(UNSTABLE_MESSAGE)
-        return None
-    W = 1 / (miu - lam)
-    return W
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
+    rho = lam / miu
+    if rho >= 1:
+        raise NameError(UNSTABLE_MESSAGE)
+    w = 1 / (miu - lam)
+    return w
 
 
-def mm1_model_compute_Pn(lam, miu, n):
+def mm1_model_compute_pn(lam, miu, n):
     """computes the probability of n clients in a M/M/1 queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param n: Number of clients
     return: Pn = Probability of n clients"""
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
+    elif n < 0:
+        raise NameError(NEGATIVE_N_ERROR)
     rho = lam / miu
-    Pn = 0
+    if rho >= 1:
+        raise NameError(UNSTABLE_MESSAGE)
+    pn = 0
     if n == 0:
-        Pn = 1 - rho
+        pn = 1 - rho
     elif n > 0:
-        Pn = (1 - rho) * pow(rho, n)
-    return Pn
+        pn = (1 - rho) * pow(rho, n)
+    return pn
 
 
 # -------------------------M/M/s------------------------------------------------
@@ -113,7 +132,7 @@ def mms_model_compute_p_zero(lam, miu, s):
     param s: Number of servers
     return: Pzero = Probability of zero clients"""
     if lam <= 0 or miu <= 0 or s <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / (s * miu)
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -133,7 +152,7 @@ def mms_model_info(lam, miu, s):
     return: system_info = [rho, Pzero, Lq, L, Wq, W]"""
     # calculate rho to determine if the system is stable
     if lam <= 0 or miu <= 0 or s <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / (s * miu)
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -160,7 +179,7 @@ def mms_model_compute_lq(lam, miu, s):
     param s: Number of servers
     return: Lq = Average number of clients in the queue"""
     if lam <= 0 or miu <= 0 or s <= 0:
-        raise NameError(NEGATIVE_INPUT_ERROR)
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     rho = lam / (s * miu)
     if rho >= 1:
         raise NameError(UNSTABLE_MESSAGE)
@@ -224,89 +243,100 @@ def mms_model_compute_p_n(lam, miu, s, n):
 
 
 # -------------------------M/M/1/K----------------------------------------------
-# all the functions in this section are based on the equations of the M/M/s model
+# all the functions in this section are based on the equations of the M/M/1/K model
 # as described in the book "Introduction to Operations Research" by Hillier and Lieberman
 # note: all functions have been tested and work properly
-def mm1k_model_compute_Pzero(lam, miu, k):
+def mm1k_model_compute_p_zero(lam, miu, k):
     """computes the probability of zero clients in a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
     return: Pzero = Probability of zero clients"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     rho = lam / miu
-    Pzero = 0
+    p_zero = 0
     if rho == 1:
-        Pzero = 1 / (k + 1)
+        p_zero = 1 / (k + 1)
     else:
-        Pzero = (1 - rho) / (1 - pow(rho, k + 1))
-    return Pzero
+        p_zero = (1 - rho) / (1 - pow(rho, k + 1))
+    return p_zero
 
 
-def mm1k_model_compute_Pn(lam, miu, k, n):
-    # TODO(@AboTresol): should we check if k is greater than n?
+def mm1k_model_compute_pn(lam, miu, k, n):
     """computes the probability of n clients in a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
     param n: Number of clients
     return: Pn = Probability of n clients"""
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
     rho = lam / miu
-    Pn = 0
+    pn = 0
     if rho == 1:
-        Pn = 1 / (k + 1)
+        pn = 1 / (k + 1)
     else:
-        Pn = ((1 - rho) / (1 - pow(rho, k + 1))) * (pow(rho, n))
-    return Pn
+        pn = ((1 - rho) / (1 - pow(rho, k + 1))) * (pow(rho, n))
+    return pn
 
 
-def mm1k_model_compute_L(lam, miu, k):
+def mm1k_model_compute_l(lam, miu, k):
     """computes the expected number of clients in a M/M/1/K queueing system.
     param rho: Utilization factor
     param k: Capacity of the system
     return: L = Expected number of clients"""
-    L = 0
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
+    l = 0
     rho = lam / miu
     if rho == 1:
-        L = k / 2
+        l = k / 2
     else:
-        L = (rho / (1 - rho)) - ((k + 1) * pow(rho, k + 1) / (1 - pow(rho, k + 1)))
-    return L
+        l = (rho / (1 - rho)) - ((k + 1) * pow(rho, k + 1) / (1 - pow(rho, k + 1)))
+    return l
 
 
-def mm1k_model_compute_Lq(lam, miu, k):
+def mm1k_model_compute_lq(lam, miu, k):
     """computes the expected number of clients in the queue of a M/M/1/K queueing system.
     param rho: Utilization factor
     param k: Capacity of the system
     return: Lq = Expected number of clients in the queue"""
-    Lq = 0
-    L = mm1k_model_compute_L(lam, miu, k)
-    Pzero = mm1k_model_compute_Pzero(lam, miu, k)
-    Lq = L - (1 - Pzero)
-    return Lq
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
+    lq = 0
+    l = mm1k_model_compute_l(lam, miu, k)
+    p_zero = mm1k_model_compute_p_zero(lam, miu, k)
+    lq = l - (1 - p_zero)
+    return lq
 
 
-def mm1k_model_compute_W(lam, miu, k):
+def mm1k_model_compute_w(lam, miu, k):
     """computes the expected waiting time in a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
     return: W = Expected waiting time"""
-    W = 0
-    L = mm1k_model_compute_L(lam, miu, k)
-    W = L / mm1k_model_compute_average_lambda(lam, miu, k)
-    return W
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
+    w = 0
+    l = mm1k_model_compute_l(lam, miu, k)
+    w = l / mm1k_model_compute_average_lambda(lam, miu, k)
+    return w
 
 
-def mm1k_model_compute_Wq(lam, miu, k):
+def mm1k_model_compute_wq(lam, miu, k):
     """computes the expected waiting time in the queue of a M/M/1/K queueing system.
     param lam: Arrival rate
     param miu: Service rate
     param k: Capacity of the system
     return: Wq = Expected waiting time in the queue"""
-    Wq = 0
-    Lq = mm1k_model_compute_Lq(lam, miu, k)
-    Wq = Lq / mm1k_model_compute_average_lambda(lam, miu, k)
-    return Wq
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
+    wq = 0
+    lq = mm1k_model_compute_lq(lam, miu, k)
+    wq = lq / mm1k_model_compute_average_lambda(lam, miu, k)
+    return wq
 
 
 def mm1k_model_compute_average_lambda(lam, miu, k):
@@ -315,8 +345,10 @@ def mm1k_model_compute_average_lambda(lam, miu, k):
     param miu: Service rate
     param k: Capacity of the system
     return: average_lambda = average arrival rate"""
-    Pk = mm1k_model_compute_Pn(lam, miu, k, k)
-    average_lambda = lam * (1 - Pk)
+    if k <= 0:
+        raise NameError(NEGATIVE_ZERO_K_ERROR)
+    pk = mm1k_model_compute_pn(lam, miu, k, k)
+    average_lambda = lam * (1 - pk)
     return average_lambda
 
 
@@ -331,15 +363,15 @@ def mm1k_model_info(lam, miu, k):
     # calculate rho, remember that mm1k models are always stable
     system_info[0] = lam / miu
     # calculate probability of zero clients
-    system_info[1] = mm1k_model_compute_Pzero(lam, miu, k)
+    system_info[1] = mm1k_model_compute_p_zero(lam, miu, k)
     # calculate L expected number of clients in the system
-    system_info[2] = mm1k_model_compute_L(lam, miu, k)
+    system_info[2] = mm1k_model_compute_l(lam, miu, k)
     # calculate the Lq expected lenght of queue
-    system_info[3] = mm1k_model_compute_Lq(lam, miu, k)
+    system_info[3] = mm1k_model_compute_lq(lam, miu, k)
     # calculate the Wq expected waiting time in queue
-    system_info[4] = mm1k_model_compute_Wq(lam, miu, k)
+    system_info[4] = mm1k_model_compute_wq(lam, miu, k)
     # calculate the W expected waiting time in system
-    system_info[5] = mm1k_model_compute_W(lam, miu, k)
+    system_info[5] = mm1k_model_compute_w(lam, miu, k)
     return system_info
 
 

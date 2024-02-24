@@ -40,7 +40,7 @@ class TestMMs:
                 qt.mms_model_compute_p_zero(lam, miu, s)
                 # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid inputs in compute p_zero."
 
     # Test for unstable system (rho >= 1)
@@ -64,7 +64,7 @@ class TestMMs:
                 qt.mms_model_compute_lq(lam, miu, s)
                 # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error when invalid input in compute lq."
 
     # test stable system valid input
@@ -102,7 +102,7 @@ class TestMMs:
                 qt.mms_model_compute_wq(lam, miu, s)
                 # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error with invalid inputs in compute wq."
 
     # test compute w
@@ -128,7 +128,7 @@ class TestMMs:
                 qt.mms_model_compute_w(lam, miu, s)
                 # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error with invalid inputs in compute w."
 
     # testing for unstable systems
@@ -151,7 +151,7 @@ class TestMMs:
                 qt.mms_model_compute_l(lam, miu, s)
                 # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error with invalid inputs in compute l."
 
     # testing for unstable systems
@@ -177,7 +177,7 @@ class TestMMs:
                 qt.mms_model_compute_p_n(lam, miu, s, n)
                 # assert
             assert (str(exception_info.value) == qt.NEGATIVE_N_ERROR) or (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error with invalid inputs in compute p_n."
 
     # testing unstable system
@@ -221,7 +221,7 @@ class TestMMs:
                 qt.mms_model_info(lam, miu, s)
                 # assert
             assert (
-                str(exception_info.value) == qt.NEGATIVE_INPUT_ERROR
+                str(exception_info.value) == qt.NEGATIVE_ZERO_LAM_MIU_ERROR
             ), "Did not raise error with invalid inputs in model info."
 
     # testing unstable system
