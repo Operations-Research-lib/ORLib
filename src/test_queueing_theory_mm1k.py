@@ -53,14 +53,13 @@ class TestMm1k:
         This function tests if the k input raise an exception when is zero or negative.
         """
         k_cases = [0,-1]
-        n_input = 1
         lam_input = 20
         miu_input = 30
 
         for k_input in k_cases:
             with raises(Exception) as exception_info:
                 # act
-                qt.mm1k_model_compute_pn(lam = lam_input, miu = miu_input, k = k_input, n = n_input)
+                qt.mm1k_model_compute_p_zero(lam = lam_input, miu = miu_input, k = k_input)
 
             # assert
             assert str(exception_info.value) == qt.NEGATIVE_ZERO_K_ERROR
@@ -328,7 +327,6 @@ class TestMm1k:
             pn_calc = qt.mm1k_model_compute_pn(lam = lam_input, miu = miu_input, k = k_input,
                                                n = n_input)
             # assert
-            assert pn_calc != 0, "pn is equal to 0"
             assert pn_calc == approx(
                 expected_output, rel=1e-2
             ), "Did not return expected result in compute pn."

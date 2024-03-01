@@ -272,8 +272,12 @@ def mm1k_model_compute_pn(lam, miu, k, n):
     param k: Capacity of the system
     param n: Number of clients
     return: Pn = Probability of n clients"""
+    if miu <= 0 or lam <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     if k <= 0:
         raise NameError(NEGATIVE_ZERO_K_ERROR)
+    if n < 0:
+        raise NameError(NEGATIVE_N_ERROR)
     rho = lam / miu
     pn = 0
     if rho == 1:
