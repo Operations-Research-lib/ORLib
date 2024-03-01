@@ -304,6 +304,8 @@ def mm1k_model_compute_lq(lam, miu, k):
     param rho: Utilization factor
     param k: Capacity of the system
     return: Lq = Expected number of clients in the queue"""
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     if k <= 0:
         raise NameError(NEGATIVE_ZERO_K_ERROR)
     lq = 0
