@@ -280,7 +280,9 @@ def mm1k_model_compute_pn(lam, miu, k, n):
         raise NameError(NEGATIVE_N_ERROR)
     rho = lam / miu
     pn = 0
-    if rho == 1:
+    if n > k:
+        return pn
+    elif rho == 1:
         pn = 1 / (k + 1)
     else:
         pn = ((1 - rho) / (1 - pow(rho, k + 1))) * (pow(rho, n))
