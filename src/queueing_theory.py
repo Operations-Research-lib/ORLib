@@ -288,6 +288,8 @@ def mm1k_model_compute_l(lam, miu, k):
     param rho: Utilization factor
     param k: Capacity of the system
     return: L = Expected number of clients"""
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     if k <= 0:
         raise NameError(NEGATIVE_ZERO_K_ERROR)
     l = 0
