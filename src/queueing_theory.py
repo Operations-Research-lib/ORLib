@@ -252,6 +252,8 @@ def mm1k_model_compute_p_zero(lam, miu, k):
     param miu: Service rate
     param k: Capacity of the system
     return: Pzero = Probability of zero clients"""
+    if miu <= 0 or lam <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     if k <= 0:
         raise NameError(NEGATIVE_ZERO_K_ERROR)
     rho = lam / miu
