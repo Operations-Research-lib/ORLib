@@ -252,6 +252,8 @@ def mm1k_model_compute_p_zero(lam, miu, k):
     param miu: Service rate
     param k: Capacity of the system
     return: Pzero = Probability of zero clients"""
+    if miu <= 0 or lam <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     if k <= 0:
         raise NameError(NEGATIVE_ZERO_K_ERROR)
     rho = lam / miu
@@ -270,11 +272,17 @@ def mm1k_model_compute_pn(lam, miu, k, n):
     param k: Capacity of the system
     param n: Number of clients
     return: Pn = Probability of n clients"""
+    if miu <= 0 or lam <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     if k <= 0:
         raise NameError(NEGATIVE_ZERO_K_ERROR)
+    if n < 0:
+        raise NameError(NEGATIVE_N_ERROR)
     rho = lam / miu
     pn = 0
-    if rho == 1:
+    if n > k:
+        return pn
+    elif rho == 1:
         pn = 1 / (k + 1)
     else:
         pn = ((1 - rho) / (1 - pow(rho, k + 1))) * (pow(rho, n))
@@ -286,6 +294,8 @@ def mm1k_model_compute_l(lam, miu, k):
     param rho: Utilization factor
     param k: Capacity of the system
     return: L = Expected number of clients"""
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     if k <= 0:
         raise NameError(NEGATIVE_ZERO_K_ERROR)
     l = 0
@@ -302,6 +312,8 @@ def mm1k_model_compute_lq(lam, miu, k):
     param rho: Utilization factor
     param k: Capacity of the system
     return: Lq = Expected number of clients in the queue"""
+    if lam <= 0 or miu <= 0:
+        raise NameError(NEGATIVE_ZERO_LAM_MIU_ERROR)
     if k <= 0:
         raise NameError(NEGATIVE_ZERO_K_ERROR)
     lq = 0
